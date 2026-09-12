@@ -23,18 +23,18 @@ Local .mp3 FFT validated via console spectrum. No 3D coupling.
 | Indicator | Value |
 | --------- | ----- |
 | Total Issues | 3 |
-| Done | 0 |
+| Done | 3 |
 | In Progress | 0 |
 | Blocked | 0 |
-| Not Started | 3 |
+| Not Started | 0 |
 
 ## 3. Sprint Items
 
 | Issue | Title | Owner | Priority | Status |
 | ----- | ----- | ----- | -------- | ------ |
-| VJLAB-04 | Local .mp3 upload + AudioContext lifecycle | Owner | High | Not Started |
-| VJLAB-05 | Spectrum engine with smoothing | Owner | High | Not Started |
-| VJLAB-06 | Console spectrum validation | Owner | High | Not Started |
+| VJLAB-04 | Local .mp3 upload + AudioContext lifecycle | Owner | High | Done |
+| VJLAB-05 | Spectrum engine with smoothing | Owner | High | Done |
+| VJLAB-06 | Console spectrum validation | Owner | High | Done |
 
 ## 4. Dependencies
 
@@ -57,7 +57,7 @@ Local .mp3 FFT validated via console spectrum. No 3D coupling.
 
 ### Current Situation
 
-Sprint 02 planned, awaiting execution start from clean `main`.
+Executed on branch `feature/VJLAB-04-audio-engine`. Upload panel overlays the blank stage. Gate green: 8 tests passed, build success, lint clean. Awaiting manual console validation with a local .mp3.
 
 ### Main Advances
 
