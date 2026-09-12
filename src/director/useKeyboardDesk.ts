@@ -9,6 +9,15 @@ export function useKeyboardDesk() {
       const store = useDirectorStore.getState();
 
       switch (event.code) {
+        case 'Digit1':
+          store.setScene(0);
+          break;
+        case 'Digit2':
+          store.setScene(1);
+          break;
+        case 'Digit3':
+          store.setScene(2);
+          break;
         case 'Space':
           event.preventDefault();
           store.toggleStrobe();
