@@ -3,9 +3,11 @@ import { create } from 'zustand';
 interface DirectorState {
   strobeOn: boolean;
   burstCount: number;
+  activeSceneId: 0 | 1 | 2;
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
+  setScene: (id: number) => void;
 }
 
 /**
@@ -16,6 +18,7 @@ interface DirectorState {
 export const useDirectorStore = create<DirectorState>((set) => ({
   strobeOn: false,
   burstCount: 0,
+  activeSceneId: 0,
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -26,6 +29,8 @@ export const useDirectorStore = create<DirectorState>((set) => ({
     liveRefs.boost = 0;
     set({ strobeOn: false, burstCount: 0 });
   },
+  setScene: (id: number) =>
+    set({ activeSceneId: (Math.max(0, Math.min(2, Math.floor(id))) % 3) as 0 | 1 | 2 }),
 }));
 
 export const liveRefs = {
@@ -36,6 +41,7 @@ export const liveRefs = {
 };
 
 export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
+  { key: '1 / 2 / 3', action: 'Switch scene' },
   { key: 'Space', action: 'Toggle strobe (default off)' },
   { key: 'B', action: 'Fire burst impulse' },
   { key: 'Arrows', action: 'Nudge camera' },
