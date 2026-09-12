@@ -45,3 +45,49 @@
 .audio-hint {
   opacity: 0.7;
 }
+
+.shortcut-map {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 10;
+  padding: 10px 12px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.shortcut-map ul {
+  margin: 6px 0;
+  padding-left: 18px;
+}
+
+.shortcut-map code {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.strobe-warning {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  padding: 10px 14px;
+  color: #000;
+  background: #ffd60a;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.strobe-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
