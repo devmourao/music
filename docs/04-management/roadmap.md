@@ -1,0 +1,52 @@
+# Roadmap — VJ Lab
+
+## Overview
+
+Strategic evolution from blank stage to public MVP. Each phase has a clear exit criterion. No phase starts before the previous one is validated.
+
+## Phases
+
+### Phase 1 — Foundation
+
+* Objective: blank 3D stage running at 60 FPS with tooling ready.
+* Expected result: Vite + React + TypeScript + Tailwind verified; test runner green; ESLint clean; static cube rendering.
+* Dependencies: none.
+* Exit: `npm run dev` shows black stage + cube; `npm test`, `npm run build`, `npm run lint` pass.
+
+### Phase 2 — Audio Engine
+
+* Objective: prove the browser can read music.
+* Expected result: local .mp3 upload; single AudioContext; analyser node; console spectrum showing bass pulsing with the beat.
+* Dependencies: Phase 1.
+* Exit: play track and observe normalized `{ bass, mids, treble }` in console.
+
+### Phase 3 — Reactive Hello World
+
+* Objective: first sound-reactive scene.
+* Expected result: static cube connected to audio bus; scale pulses on bass with exponential smoothing; no per-frame React re-render.
+* Dependencies: Phase 2.
+* Exit: visual pulse in sync with kick, fluid motion.
+
+### Phase 4 — VJ Desk
+
+* Objective: turn the passive visualizer into a playable instrument.
+* Expected result: keyboard desk (1–3 scenes, space strobe, B burst, arrows camera); global post-processing rig; strobe warning + kill switch.
+* Dependencies: Phase 3.
+* Exit: live direction without drop below 55 FPS on target machine.
+
+### Phase 5 — Factory and Polish
+
+* Objective: expand content and ship the portfolio MVP.
+* Expected result: 3 base scenes + data presets; playlist queue; public deploy; release notes; documentation in sync.
+* Dependencies: Phase 4.
+* Exit: public URL + `v0.1.0` tag.
+
+## Out of Roadmap (Future Evolution)
+
+* DJ routes with embedded audio, tab / system capture, photorealistic scenarios, procedural avatars, hardware LED integration.
+
+## Revision History
+
+| Version | Date | Change |
+| ------- | ---- | ------ |
+| 0.1.0 | 2026-09-11 | Initial roadmap |
