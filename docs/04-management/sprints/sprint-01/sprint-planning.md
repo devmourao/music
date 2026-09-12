@@ -101,7 +101,3 @@ Standard project Definition of Done applies with no exceptions.
 | Approver | Marcos Ferreira Mourão | 2026-09-11 |
 
 ## 14. Revision History
-
-| Version | Date | Change | Author |
-| ------- | ---- | ------ | ------ |
-| 1.0.0 | 2026-09-11 | Initial planning | Marcos Ferreira Mourão |
