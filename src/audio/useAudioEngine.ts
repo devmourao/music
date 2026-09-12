@@ -8,6 +8,7 @@ import {
   smoothBands,
   type SpectrumBands,
 } from './spectrum';
+import { publishBands } from './audioBus';
 
 export interface AudioEngineApi {
   fileName: string | null;
@@ -133,6 +134,7 @@ export function useAudioEngine(): AudioEngineApi {
         analyser.getByteFrequencyData(data as Uint8Array<ArrayBuffer>);
         const target = bandAverages(data, context.sampleRate, FFT_SIZE);
         bandsRef.current = smoothBands(bandsRef.current, target, LERP_FACTOR);
+        publishBands(bandsRef.current);
 
         const now = performance.now();
         if (now - lastLogRef.current >= CONSOLE_LOG_INTERVAL_MS) {
