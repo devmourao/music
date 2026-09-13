@@ -41,6 +41,13 @@ Strategic evolution from blank stage to public MVP. Each phase has a clear exit 
 * Dependencies: Phase 4.
 * Exit: public URL + `v0.1.0` tag.
 
+### Phase 6 — Live Control v0.2.0 (planned)
+
+* Objective: industry-standard live desk on top of the shipped MVP.
+* Expected result: A/B transitions, palette system, continuous zoom, effect dry/wet, image texture on mesh, animated text overlay, strobe speed, global effects pack.
+* Dependencies: Phase 5 released.
+* Exit: v0.2.0 tag with live-control demo.
+
 ## Out of Roadmap (Future Evolution)
 
 * DJ routes with embedded audio, tab / system capture, photorealistic scenarios, procedural avatars, hardware LED integration.
@@ -50,3 +57,4 @@ Strategic evolution from blank stage to public MVP. Each phase has a clear exit 
 | Version | Date | Change |
 | ------- | ---- | ------ |
 | 0.1.0 | 2026-09-11 | Initial roadmap |
+| 0.2.0 | 2026-09-12 | Add Phase 6 Live Control v0.2.0 |
