@@ -4,7 +4,15 @@ import * as THREE from 'three';
 import { readBands } from '../audio/audioBus';
 import { meshDisplacement } from './sceneMath';
 
-export function DeformableMeshScene() {
+export function DeformableMeshScene({
+  color = '#f0abfc',
+  emissive = '#a21caf',
+  gain = 1,
+}: {
+  color?: string;
+  emissive?: string;
+  gain?: number;
+}) {
   const meshRef = useRef<THREE.Mesh>(null);
   const base = useMemo(() => {
     const geometry = new THREE.SphereGeometry(1.2, 40, 40);
@@ -24,7 +32,7 @@ export function DeformableMeshScene() {
       const y = base[i * 3 + 1];
       const z = base[i * 3 + 2];
       const normal = new THREE.Vector3(x, y, z).normalize();
-      const offset = meshDisplacement(bass, mids, x, y, z, time);
+      const offset = meshDisplacement(bass, mids, x, y, z, time) * gain;
       position.setXYZ(
         i,
         x + normal.x * offset,
@@ -40,8 +48,8 @@ export function DeformableMeshScene() {
     <mesh ref={meshRef}>
       <sphereGeometry args={[1.2, 40, 40]} />
       <meshStandardMaterial
-        color="#f0abfc"
-        emissive="#a21caf"
+        color={color}
+        emissive={emissive}
         emissiveIntensity={0.7}
         wireframe
       />

@@ -10,13 +10,28 @@ export function useKeyboardDesk() {
 
       switch (event.code) {
         case 'Digit1':
-          store.setScene(0);
+          store.setPreset(0);
           break;
         case 'Digit2':
-          store.setScene(1);
+          store.setPreset(1);
           break;
         case 'Digit3':
-          store.setScene(2);
+          store.setPreset(2);
+          break;
+        case 'Digit4':
+          store.setPreset(3);
+          break;
+        case 'Digit5':
+          store.setPreset(4);
+          break;
+        case 'Digit6':
+          store.setPreset(5);
+          break;
+        case 'KeyN':
+          store.nextPreset();
+          break;
+        case 'KeyP':
+          store.prevPreset();
           break;
         case 'Space':
           event.preventDefault();

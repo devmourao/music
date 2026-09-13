@@ -2,11 +2,38 @@ import { useDirectorStore } from '../director/directorStore';
 import { DeformableMeshScene } from './DeformableMeshScene';
 import { ParticleFieldScene } from './ParticleFieldScene';
 import { TunnelFieldScene } from './TunnelFieldScene';
+import { getPreset } from './presets';
 
 export function SceneHost() {
-  const activeSceneId = useDirectorStore((s) => s.activeSceneId);
+  const activePresetId = useDirectorStore((s) => s.activePresetId);
+  const preset = getPreset(activePresetId);
 
-  if (activeSceneId === 1) return <DeformableMeshScene />;
-  if (activeSceneId === 2) return <TunnelFieldScene />;
-  return <ParticleFieldScene />;
+  if (preset.scene === 1)
+    return (
+      <DeformableMeshScene
+        key={preset.id}
+        color={preset.palette.primary}
+        emissive={preset.palette.emissive}
+        gain={preset.gain}
+      />
+    );
+  if (preset.scene === 2)
+    return (
+      <TunnelFieldScene
+        key={preset.id}
+        color={preset.palette.primary}
+        emissive={preset.palette.emissive}
+        gain={preset.gain}
+        speed={preset.speed}
+      />
+    );
+  return (
+    <ParticleFieldScene
+      key={preset.id}
+      color={preset.palette.primary}
+      emissive={preset.palette.emissive}
+      gain={preset.gain}
+      speed={preset.speed}
+    />
+  );
 }

@@ -8,14 +8,15 @@ import { useDirectorStore } from './director/directorStore';
 import { useKeyboardDesk } from './director/useKeyboardDesk';
 import { CameraRig } from './scenes/CameraRig';
 import { PostRig } from './scenes/PostRig';
-import { SCENE_NAMES } from './scenes/sceneMath';
 import { SceneHost } from './scenes/SceneHost';
+import { PLAYLIST, PRESETS, getPreset } from './scenes/presets';
 import { CAMERA_POSITION, STAGE_BACKGROUND } from './stageConfig';
 
 function App() {
   const engine = useAudioEngine();
   useKeyboardDesk();
-  const activeSceneId = useDirectorStore((s) => s.activeSceneId);
+  const activePresetId = useDirectorStore((s) => s.activePresetId);
+  const preset = getPreset(activePresetId);
 
   return (
     <div className="stage-container" data-testid="blank-stage">
@@ -23,7 +24,7 @@ function App() {
       <ShortcutMap />
       <StrobeOverlay />
       <div className="scene-badge" data-testid="scene-name">
-        {SCENE_NAMES[activeSceneId]} · keys 1–3
+        {preset.name} · {activePresetId + 1}/{PRESETS.length} · playlist {PLAYLIST.length}
       </div>
       <Canvas camera={{ position: CAMERA_POSITION }}>
         <color attach="background" args={[STAGE_BACKGROUND]} />
