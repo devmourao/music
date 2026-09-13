@@ -4,7 +4,17 @@ import * as THREE from 'three';
 import { readBands } from '../audio/audioBus';
 import { PARTICLE_COUNT, particleScale } from './sceneMath';
 
-export function ParticleFieldScene() {
+export function ParticleFieldScene({
+  color = '#7dd3fc',
+  emissive = '#0ea5e9',
+  gain = 1,
+  speed = 1,
+}: {
+  color?: string;
+  emissive?: string;
+  gain?: number;
+  speed?: number;
+}) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const seeds = useMemo(
     () =>
@@ -23,12 +33,12 @@ export function ParticleFieldScene() {
     if (!mesh) return;
     const { bass, mids, treble } = readBands();
     const time = clock.elapsedTime;
-    const groupPulse = 1 + bass * 0.35;
+    const groupPulse = 1 + bass * 0.35 * gain;
     const size = particleScale(treble);
 
     for (let i = 0; i < PARTICLE_COUNT; i += 1) {
       const s = seeds[i];
-      const angle = s.angle + time * s.speed * (0.4 + mids);
+      const angle = s.angle + time * s.speed * speed * (0.4 + mids);
       dummy.position.set(
         Math.cos(angle) * s.radius * groupPulse,
         s.height + Math.sin(time * 1.5 + i) * 0.35 * (0.3 + mids),
@@ -44,7 +54,7 @@ export function ParticleFieldScene() {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, PARTICLE_COUNT]}>
       <sphereGeometry args={[0.06, 8, 8]} />
-      <meshStandardMaterial color="#7dd3fc" emissive="#0ea5e9" emissiveIntensity={1.2} />
+      <meshStandardMaterial color={color} emissive={emissive} emissiveIntensity={1.2} />
     </instancedMesh>
   );
 }

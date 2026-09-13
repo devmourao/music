@@ -26,10 +26,14 @@ describe('scene factory helpers', () => {
     );
   });
 
-  it('switches scenes by id', () => {
-    useDirectorStore.getState().setScene(2);
-    expect(useDirectorStore.getState().activeSceneId).toBe(2);
-    useDirectorStore.getState().setScene(0);
-    expect(useDirectorStore.getState().activeSceneId).toBe(0);
+  it('switches presets by id', () => {
+    useDirectorStore.getState().setPreset(5);
+    expect(useDirectorStore.getState().activePresetId).toBe(5);
+    useDirectorStore.getState().setPreset(0);
+    expect(useDirectorStore.getState().activePresetId).toBe(0);
+    useDirectorStore.getState().nextPreset();
+    expect(useDirectorStore.getState().activePresetId).toBe(1);
+    useDirectorStore.getState().prevPreset();
+    expect(useDirectorStore.getState().activePresetId).toBe(0);
   });
 });

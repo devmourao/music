@@ -1,13 +1,16 @@
 import { create } from 'zustand';
+import { PRESET_COUNT } from '../scenes/presets';
 
 interface DirectorState {
   strobeOn: boolean;
   burstCount: number;
-  activeSceneId: 0 | 1 | 2;
+  activePresetId: number;
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
-  setScene: (id: number) => void;
+  setPreset: (id: number) => void;
+  nextPreset: () => void;
+  prevPreset: () => void;
 }
 
 /**
@@ -18,7 +21,7 @@ interface DirectorState {
 export const useDirectorStore = create<DirectorState>((set) => ({
   strobeOn: false,
   burstCount: 0,
-  activeSceneId: 0,
+  activePresetId: 0,
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -29,8 +32,18 @@ export const useDirectorStore = create<DirectorState>((set) => ({
     liveRefs.boost = 0;
     set({ strobeOn: false, burstCount: 0 });
   },
-  setScene: (id: number) =>
-    set({ activeSceneId: (Math.max(0, Math.min(2, Math.floor(id))) % 3) as 0 | 1 | 2 }),
+  setPreset: (id: number) =>
+    set({
+      activePresetId:
+        ((Math.floor(id) % PRESET_COUNT) + PRESET_COUNT) % PRESET_COUNT,
+    }),
+  nextPreset: () =>
+    set((s) => ({ activePresetId: (s.activePresetId + 1) % PRESET_COUNT })),
+  prevPreset: () =>
+    set((s) => ({
+      activePresetId:
+        (s.activePresetId - 1 + PRESET_COUNT) % PRESET_COUNT,
+    })),
 }));
 
 export const liveRefs = {
@@ -41,7 +54,8 @@ export const liveRefs = {
 };
 
 export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
-  { key: '1 / 2 / 3', action: 'Switch scene' },
+  { key: '1–6', action: 'Select preset' },
+  { key: 'N / P', action: 'Next / previous preset in playlist' },
   { key: 'Space', action: 'Toggle strobe (default off)' },
   { key: 'B', action: 'Fire burst impulse' },
   { key: 'Arrows', action: 'Nudge camera' },
