@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { liveRefs, useDirectorStore } from './directorStore';
+import { PRESET_COUNT } from '../scenes/presets';
 
 const CAMERA_STEP = 0.12;
 
@@ -10,28 +11,41 @@ export function useKeyboardDesk() {
 
       switch (event.code) {
         case 'Digit1':
-          store.setPreset(0);
+          store.requestDissolve(0);
           break;
         case 'Digit2':
-          store.setPreset(1);
+          store.requestDissolve(1);
           break;
         case 'Digit3':
-          store.setPreset(2);
+          store.requestDissolve(2);
           break;
         case 'Digit4':
-          store.setPreset(3);
+          store.requestDissolve(3);
           break;
         case 'Digit5':
-          store.setPreset(4);
+          store.requestDissolve(4);
           break;
         case 'Digit6':
-          store.setPreset(5);
+          store.requestDissolve(5);
           break;
         case 'KeyN':
-          store.nextPreset();
+          store.requestDissolve(
+            (store.activePresetId + 1) % PRESET_COUNT,
+          );
           break;
         case 'KeyP':
-          store.prevPreset();
+          store.requestDissolve(
+            (store.activePresetId - 1 + PRESET_COUNT) % PRESET_COUNT,
+          );
+          break;
+        case 'KeyX':
+          store.hardCutNext();
+          break;
+        case 'KeyT':
+          store.cycleDuration();
+          break;
+        case 'KeyH':
+          store.stepHue();
           break;
         case 'Space':
           event.preventDefault();

@@ -8,6 +8,7 @@ export interface ScenePreset {
   name: string;
   scene: 0 | 1 | 2;
   palette: ScenePalette;
+  background: string;
   gain: number;
   speed: number;
 }
@@ -18,6 +19,7 @@ export const PRESETS: ScenePreset[] = [
     name: 'Nebula Drift',
     scene: 0,
     palette: { primary: '#7dd3fc', emissive: '#0ea5e9' },
+    background: '#010409',
     gain: 1,
     speed: 1,
   },
@@ -26,6 +28,7 @@ export const PRESETS: ScenePreset[] = [
     name: 'Magma Swarm',
     scene: 0,
     palette: { primary: '#fdba74', emissive: '#ea580c' },
+    background: '#0d0503',
     gain: 1.6,
     speed: 1.8,
   },
@@ -34,6 +37,7 @@ export const PRESETS: ScenePreset[] = [
     name: 'Neon Bloom',
     scene: 1,
     palette: { primary: '#f0abfc', emissive: '#a21caf' },
+    background: '#0a0310',
     gain: 1,
     speed: 1,
   },
@@ -42,6 +46,7 @@ export const PRESETS: ScenePreset[] = [
     name: 'Deep Pulse',
     scene: 1,
     palette: { primary: '#6ee7b7', emissive: '#047857' },
+    background: '#02100b',
     gain: 0.6,
     speed: 0.7,
   },
@@ -50,6 +55,7 @@ export const PRESETS: ScenePreset[] = [
     name: 'Hyper Tunnel',
     scene: 2,
     palette: { primary: '#22d3ee', emissive: '#0e7490' },
+    background: '#01090d',
     gain: 1,
     speed: 1,
   },
@@ -58,6 +64,7 @@ export const PRESETS: ScenePreset[] = [
     name: 'Ultraviolet Run',
     scene: 2,
     palette: { primary: '#c4b5fd', emissive: '#6d28d9' },
+    background: '#0a0618',
     gain: 1.4,
     speed: 1.6,
   },
