@@ -1,8 +1,17 @@
-import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing';
+import {
+  Bloom,
+  EffectComposer,
+  HueSaturation,
+  Vignette,
+} from '@react-three/postprocessing';
+import { useDirectorStore } from '../director/directorStore';
 
 export function PostRig() {
+  const hueShift = useDirectorStore((s) => s.hueShift);
+
   return (
     <EffectComposer multisampling={0}>
+      <HueSaturation hue={hueShift * Math.PI * 2} saturation={0.15} />
       <Bloom
         intensity={0.6}
         luminanceThreshold={0.75}

@@ -4,13 +4,14 @@ import { useAudioEngine } from './audio/useAudioEngine';
 import { AudioPanel } from './components/AudioPanel';
 import { ShortcutMap } from './components/ShortcutMap';
 import { StrobeOverlay } from './components/StrobeOverlay';
+import { TransitionOverlay } from './components/TransitionOverlay';
 import { useDirectorStore } from './director/directorStore';
 import { useKeyboardDesk } from './director/useKeyboardDesk';
 import { CameraRig } from './scenes/CameraRig';
 import { PostRig } from './scenes/PostRig';
 import { SceneHost } from './scenes/SceneHost';
 import { PLAYLIST, PRESETS, getPreset } from './scenes/presets';
-import { CAMERA_POSITION, STAGE_BACKGROUND } from './stageConfig';
+import { CAMERA_POSITION } from './stageConfig';
 
 function App() {
   const engine = useAudioEngine();
@@ -23,11 +24,12 @@ function App() {
       <AudioPanel engine={engine} />
       <ShortcutMap />
       <StrobeOverlay />
+      <TransitionOverlay />
       <div className="scene-badge" data-testid="scene-name">
         {preset.name} · {activePresetId + 1}/{PRESETS.length} · playlist {PLAYLIST.length}
       </div>
       <Canvas camera={{ position: CAMERA_POSITION }}>
-        <color attach="background" args={[STAGE_BACKGROUND]} />
+        <color attach="background" args={[preset.background]} />
         <ambientLight intensity={1} />
         <CameraRig />
         <SceneHost />

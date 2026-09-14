@@ -20,6 +20,12 @@ describe('presets', () => {
     expect([...PLAYLIST].sort((a, b) => a - b)).toEqual([0, 1, 2, 3, 4, 5]);
   });
 
+  it('gives every preset a dark background', () => {
+    for (const preset of PRESETS) {
+      expect(preset.background).toMatch(/^#[0-9a-f]{6}$/i);
+    }
+  });
+
   it('wraps preset navigation', () => {
     expect(nextPresetId(5)).toBe(0);
     expect(prevPresetId(0)).toBe(5);

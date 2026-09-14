@@ -83,6 +83,15 @@
   font-size: 12px;
 }
 
+.transition-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 18;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .strobe-warning {
   position: absolute;
   top: 12px;
