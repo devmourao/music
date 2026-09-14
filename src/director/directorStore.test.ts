@@ -39,4 +39,19 @@ describe('directorStore', () => {
     store.stepHue();
     expect(useDirectorStore.getState().hueShift).toBeGreaterThan(0);
   });
+
+  it('zooms within limits and adjusts the selected mix', () => {
+    const store = useDirectorStore.getState();
+    store.zoomIn();
+    expect(useDirectorStore.getState().zoomTarget).toBeGreaterThan(1);
+    store.zoomOut();
+    store.zoomOut();
+    expect(useDirectorStore.getState().zoomTarget).toBeLessThanOrEqual(1);
+    store.cycleFxSlot();
+    expect(useDirectorStore.getState().selectedFx).toBe('vignette');
+    store.fxDown();
+    expect(useDirectorStore.getState().mixVignette).toBeLessThan(1);
+    store.fxUp();
+    expect(useDirectorStore.getState().mixVignette).toBeCloseTo(1);
+  });
 });
