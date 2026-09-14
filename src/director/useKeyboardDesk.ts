@@ -47,6 +47,25 @@ export function useKeyboardDesk() {
         case 'KeyH':
           store.stepHue();
           break;
+        case 'Equal':
+        case 'NumpadAdd':
+          event.preventDefault();
+          store.zoomIn();
+          break;
+        case 'Minus':
+        case 'NumpadSubtract':
+          event.preventDefault();
+          store.zoomOut();
+          break;
+        case 'Backslash':
+          store.cycleFxSlot();
+          break;
+        case 'BracketLeft':
+          store.fxDown();
+          break;
+        case 'BracketRight':
+          store.fxUp();
+          break;
         case 'Space':
           event.preventDefault();
           store.toggleStrobe();

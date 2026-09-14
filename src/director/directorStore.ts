@@ -1,5 +1,13 @@
 import { create } from 'zustand';
 import { PRESET_COUNT } from '../scenes/presets';
+import {
+  MIX_STEP,
+  ZOOM_STEP,
+  clampMix,
+  clampZoom,
+  nextFxSlot,
+  type FxSlot,
+} from './fx';
 import { DEFAULT_TRANSITION_DURATION, nextDuration } from './transition';
 
 interface DirectorState {
@@ -8,6 +16,12 @@ interface DirectorState {
   activePresetId: number;
   transitionDuration: number;
   hueShift: number;
+  zoomTarget: number;
+  selectedFx: FxSlot;
+  mixBloom: number;
+  mixVignette: number;
+  mixStrobe: number;
+  masterMix: number;
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
@@ -18,6 +32,11 @@ interface DirectorState {
   hardCutNext: () => void;
   cycleDuration: () => void;
   stepHue: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  cycleFxSlot: () => void;
+  fxUp: () => void;
+  fxDown: () => void;
 }
 
 /**
@@ -31,6 +50,12 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   activePresetId: 0,
   transitionDuration: DEFAULT_TRANSITION_DURATION,
   hueShift: 0,
+  zoomTarget: 1,
+  selectedFx: 'bloom',
+  mixBloom: 1,
+  mixVignette: 1,
+  mixStrobe: 1,
+  masterMix: 1,
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -74,6 +99,58 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   cycleDuration: () =>
     set((s) => ({ transitionDuration: nextDuration(s.transitionDuration) })),
   stepHue: () => set((s) => ({ hueShift: (s.hueShift + 1 / 8) % 1 })),
+  zoomIn: () => {
+    // Held keys auto-repeat, so each event steps the damped target.
+    set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
+  },
+  zoomOut: () => {
+    set((s) => ({ zoomTarget: clampZoom(s.zoomTarget - ZOOM_STEP) }));
+  },
+  cycleFxSlot: () => set((s) => ({ selectedFx: nextFxSlot(s.selectedFx) })),
+  fxUp: () =>
+    set((s) => {
+      const value = (key: FxSlot) =>
+        clampMix(
+          (key === 'bloom'
+            ? s.mixBloom
+            : key === 'vignette'
+              ? s.mixVignette
+              : key === 'strobe'
+                ? s.mixStrobe
+                : s.masterMix) + MIX_STEP,
+        );
+      return {
+        mixBloom: s.selectedFx === 'bloom' ? value('bloom') : s.mixBloom,
+        mixVignette:
+          s.selectedFx === 'vignette' ? value('vignette') : s.mixVignette,
+        mixStrobe:
+          s.selectedFx === 'strobe' ? value('strobe') : s.mixStrobe,
+        masterMix:
+          s.selectedFx === 'master' ? value('master') : s.masterMix,
+      };
+    }),
+  fxDown: () =>
+    set((s) => {
+      const value = (key: FxSlot) =>
+        clampMix(
+          (key === 'bloom'
+            ? s.mixBloom
+            : key === 'vignette'
+              ? s.mixVignette
+              : key === 'strobe'
+                ? s.mixStrobe
+                : s.masterMix) - MIX_STEP,
+        );
+      return {
+        mixBloom: s.selectedFx === 'bloom' ? value('bloom') : s.mixBloom,
+        mixVignette:
+          s.selectedFx === 'vignette' ? value('vignette') : s.mixVignette,
+        mixStrobe:
+          s.selectedFx === 'strobe' ? value('strobe') : s.mixStrobe,
+        masterMix:
+          s.selectedFx === 'master' ? value('master') : s.masterMix,
+      };
+    }),
 }));
 
 export const liveRefs = {
@@ -81,6 +158,7 @@ export const liveRefs = {
   boost: 0,
   azimuth: 0,
   elevation: 0,
+  zoom: 1,
 };
 
 export const transitionRef = {
@@ -99,5 +177,8 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: 'Space', action: 'Toggle strobe (default off)' },
   { key: 'B', action: 'Fire burst impulse' },
   { key: 'Arrows', action: 'Nudge camera' },
+  { key: '+ / -', action: 'Zoom in / out (damped)' },
+  { key: '\\ (backslash)', action: 'Select effect slot' },
+  { key: '[ / ]', action: 'Effect mix down / up' },
   { key: 'S', action: 'Kill all effects' },
 ];
