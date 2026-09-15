@@ -41,6 +41,9 @@
 | VJLAB-24 | Strobe speed configuration | Feature | Medium | E06 | M5 | New |
 | VJLAB-25 | Global effects pack (VHS glitch, RGB split, mirror, shake, pixelate, grain, beat flash) | Feature | Low | E06 | M5 | New |
 | VJLAB-26 | Layout-independent keymap aliases + visible mix bars | UX fix | High | E06 | M5 | New |
+| VJLAB-27 | Stronger color controls (future reflection) | Research | Low | E06 | M6 | New |
+| VJLAB-28 | Strobe modes white/black/color flash | Feature | Medium | E06 | M6 | New |
+| VJLAB-29 | Lite performance mode (pixel ratio + effect caps for weak GPUs) | Feature | Medium | E06 | M6 | New |
 
 ## Dependencies
 

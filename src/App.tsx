@@ -2,6 +2,7 @@ import { Canvas } from '@react-three/fiber';
 import './App.css';
 import { useAudioEngine } from './audio/useAudioEngine';
 import { AudioPanel } from './components/AudioPanel';
+import { BeatFlashOverlay } from './components/BeatFlashOverlay';
 import { ShortcutMap } from './components/ShortcutMap';
 import { StrobeOverlay } from './components/StrobeOverlay';
 import { TextOverlay } from './components/TextOverlay';
@@ -25,6 +26,7 @@ function App() {
       <AudioPanel engine={engine} />
       <ShortcutMap />
       <StrobeOverlay />
+      <BeatFlashOverlay />
       <TransitionOverlay />
       <TextOverlay />
       <div className="scene-badge" data-testid="scene-name">

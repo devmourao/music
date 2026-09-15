@@ -14,12 +14,17 @@ export function ShortcutMap() {
   const mixVignette = useDirectorStore((s) => s.mixVignette);
   const mixStrobe = useDirectorStore((s) => s.mixStrobe);
   const masterMix = useDirectorStore((s) => s.masterMix);
+  const strobeRateHz = useDirectorStore((s) => s.strobeRateHz);
+  const vhsOn = useDirectorStore((s) => s.vhsOn);
+  const rgbOn = useDirectorStore((s) => s.rgbOn);
+  const beatFlashOn = useDirectorStore((s) => s.beatFlashOn);
   const mixes: Record<FxSlot, number> = {
     bloom: mixBloom,
     vignette: mixVignette,
     strobe: mixStrobe,
     master: masterMix,
   };
+  const selectedValue = mixes[selectedFx];
 
   return (
     <div className="shortcut-map">
@@ -32,9 +37,13 @@ export function ShortcutMap() {
         ))}
       </ul>
       <span data-testid="desk-status">
-        strobe {strobeOn ? 'ON' : 'off'} · bursts {burstCount} · fx{' '}
-        {transitionDuration.toFixed(1)}s · hue {Math.round(hueShift * 8)}/8 ·
-        zoom {zoomTarget.toFixed(2)}x · S kills all
+        strobe {strobeOn ? `ON ${strobeRateHz}Hz` : 'off'} · bursts{' '}
+        {burstCount} · fx {transitionDuration.toFixed(1)}s · hue{' '}
+        {Math.round(hueShift * 8)}/8 · zoom {zoomTarget.toFixed(2)}x ·{' '}
+        {selectedFx} {selectedValue.toFixed(1)}
+        {vhsOn ? ' · VHS' : ''}
+        {rgbOn ? ' · RGB' : ''}
+        {beatFlashOn ? ' · BEAT' : ''} · S kills all
       </span>
       <div className="mix-bars" data-testid="mix-bars">
         {SLOT_ORDER.map((slot) => (

@@ -72,6 +72,21 @@ export function useKeyboardDesk() {
         case 'KeyR':
           store.fxUp();
           break;
+        case 'Comma':
+          store.strobeSlower();
+          break;
+        case 'Period':
+          store.strobeFaster();
+          break;
+        case 'KeyV':
+          store.toggleVhs();
+          break;
+        case 'KeyC':
+          store.toggleRgb();
+          break;
+        case 'KeyJ':
+          store.toggleBeatFlash();
+          break;
         case 'Space':
           event.preventDefault();
           store.toggleStrobe();

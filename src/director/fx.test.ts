@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   applyMix,
   clampMix,
+  clampStrobeHz,
   clampZoom,
   nextFxSlot,
+  strobeIntervalMs,
   zoomRadius,
 } from './fx';
 
@@ -28,5 +30,11 @@ describe('fx mixes', () => {
   it('cycles fx slots', () => {
     expect(nextFxSlot('bloom')).toBe('vignette');
     expect(nextFxSlot('master')).toBe('bloom');
+  });
+
+  it('clamps strobe rate and derives the half-cycle interval', () => {
+    expect(clampStrobeHz(99)).toBe(12);
+    expect(clampStrobeHz(0)).toBe(1);
+    expect(strobeIntervalMs(4)).toBeCloseTo(125);
   });
 });
