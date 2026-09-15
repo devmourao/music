@@ -49,9 +49,19 @@ export function DeformableMeshScene({
     };
   }, [meshTextureUrl]);
   const meshRef = useRef<THREE.Mesh>(null);
-  const base = useMemo(() => {
+  const { base, normals } = useMemo(() => {
     const geometry = new THREE.SphereGeometry(1.2, 40, 40);
-    return geometry.attributes.position.array.slice();
+    const positions = geometry.attributes.position.array.slice();
+    const directions = new Float32Array(positions.length);
+    const v = new THREE.Vector3();
+    for (let i = 0; i < positions.length; i += 3) {
+      v.set(positions[i], positions[i + 1], positions[i + 2]).normalize();
+      directions[i] = v.x;
+      directions[i + 1] = v.y;
+      directions[i + 2] = v.z;
+    }
+    geometry.dispose();
+    return { base: positions, normals: directions };
   }, []);
 
   useFrame(({ clock }) => {
@@ -66,13 +76,12 @@ export function DeformableMeshScene({
       const x = base[i * 3];
       const y = base[i * 3 + 1];
       const z = base[i * 3 + 2];
-      const normal = new THREE.Vector3(x, y, z).normalize();
       const offset = meshDisplacement(bass, mids, x, y, z, time) * gain;
       position.setXYZ(
         i,
-        x + normal.x * offset,
-        y + normal.y * offset,
-        z + normal.z * offset,
+        x + normals[i * 3] * offset,
+        y + normals[i * 3 + 1] * offset,
+        z + normals[i * 3 + 2] * offset,
       );
     }
     position.needsUpdate = true;
