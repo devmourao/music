@@ -41,8 +41,11 @@ export function useKeyboardDesk() {
         case 'KeyX':
           store.hardCutNext();
           break;
-        case 'KeyT':
+        case 'KeyY':
           store.cycleDuration();
+          break;
+        case 'KeyT':
+          store.fireText();
           break;
         case 'KeyH':
           store.stepHue();
@@ -58,12 +61,15 @@ export function useKeyboardDesk() {
           store.zoomOut();
           break;
         case 'Backslash':
+        case 'KeyE':
           store.cycleFxSlot();
           break;
         case 'BracketLeft':
+        case 'KeyF':
           store.fxDown();
           break;
         case 'BracketRight':
+        case 'KeyR':
           store.fxUp();
           break;
         case 'Space':

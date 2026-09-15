@@ -1,4 +1,7 @@
 import { SHORTCUT_MAP, useDirectorStore } from '../director/directorStore';
+import type { FxSlot } from '../director/fx';
+
+const SLOT_ORDER: FxSlot[] = ['bloom', 'vignette', 'strobe', 'master'];
 
 export function ShortcutMap() {
   const strobeOn = useDirectorStore((s) => s.strobeOn);
@@ -11,14 +14,12 @@ export function ShortcutMap() {
   const mixVignette = useDirectorStore((s) => s.mixVignette);
   const mixStrobe = useDirectorStore((s) => s.mixStrobe);
   const masterMix = useDirectorStore((s) => s.masterMix);
-  const selectedValue =
-    selectedFx === 'bloom'
-      ? mixBloom
-      : selectedFx === 'vignette'
-        ? mixVignette
-        : selectedFx === 'strobe'
-          ? mixStrobe
-          : masterMix;
+  const mixes: Record<FxSlot, number> = {
+    bloom: mixBloom,
+    vignette: mixVignette,
+    strobe: mixStrobe,
+    master: masterMix,
+  };
 
   return (
     <div className="shortcut-map">
@@ -33,9 +34,25 @@ export function ShortcutMap() {
       <span data-testid="desk-status">
         strobe {strobeOn ? 'ON' : 'off'} · bursts {burstCount} · fx{' '}
         {transitionDuration.toFixed(1)}s · hue {Math.round(hueShift * 8)}/8 ·
-        zoom {zoomTarget.toFixed(2)}x · {selectedFx} {selectedValue.toFixed(1)} ·
-        S kills all
+        zoom {zoomTarget.toFixed(2)}x · S kills all
       </span>
+      <div className="mix-bars" data-testid="mix-bars">
+        {SLOT_ORDER.map((slot) => (
+          <div
+            key={slot}
+            className={slot === selectedFx ? 'mix-row selected' : 'mix-row'}
+          >
+            <span>{slot}</span>
+            <div className="mix-track">
+              <div
+                className="mix-fill"
+                style={{ width: `${Math.round(mixes[slot] * 100)}%` }}
+              />
+            </div>
+            <span>{mixes[slot].toFixed(1)}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

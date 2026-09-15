@@ -1,7 +1,8 @@
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { readBands } from '../audio/audioBus';
+import { useDirectorStore } from '../director/directorStore';
 import { meshDisplacement } from './sceneMath';
 
 export function DeformableMeshScene({
@@ -13,6 +14,40 @@ export function DeformableMeshScene({
   emissive?: string;
   gain?: number;
 }) {
+  const meshTextureUrl = useDirectorStore((s) => s.meshTextureUrl);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+
+  // Textured mode is unlit (tone mapping off) so uploaded images keep
+  // their original colors. Flat mode keeps the lit wireframe look.
+  useEffect(() => {
+    if (!meshTextureUrl) return;
+    const store = useDirectorStore.getState();
+    const loader = new THREE.TextureLoader();
+    let cancelled = false;
+    loader.load(
+      meshTextureUrl,
+      (loaded) => {
+        if (cancelled) return;
+        loaded.colorSpace = THREE.SRGBColorSpace;
+        console.info(`[texture] loaded ${loaded.image.width}x${loaded.image.height}`);
+        setTexture((previous) => {
+          previous?.dispose();
+          return loaded;
+        });
+        store.setMeshTextureStatus('ready');
+      },
+      undefined,
+      (error) => {
+        if (cancelled) return;
+        console.error('[texture] failed to load image', error);
+        setTexture(null);
+        store.setMeshTextureStatus('error');
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [meshTextureUrl]);
   const meshRef = useRef<THREE.Mesh>(null);
   const base = useMemo(() => {
     const geometry = new THREE.SphereGeometry(1.2, 40, 40);
@@ -45,14 +80,21 @@ export function DeformableMeshScene({
   });
 
   return (
-    <mesh ref={meshRef}>
+    <mesh
+      ref={meshRef}
+      key={meshTextureUrl ? (texture ? 'textured' : 'loading') : 'flat'}
+    >
       <sphereGeometry args={[1.2, 40, 40]} />
-      <meshStandardMaterial
-        color={color}
-        emissive={emissive}
-        emissiveIntensity={0.7}
-        wireframe
-      />
+      {meshTextureUrl && texture ? (
+        <meshBasicMaterial map={texture} toneMapped={false} />
+      ) : (
+        <meshStandardMaterial
+          color={color}
+          emissive={emissive}
+          emissiveIntensity={0.7}
+          wireframe
+        />
+      )}
     </mesh>
   );
 }

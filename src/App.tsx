@@ -4,6 +4,7 @@ import { useAudioEngine } from './audio/useAudioEngine';
 import { AudioPanel } from './components/AudioPanel';
 import { ShortcutMap } from './components/ShortcutMap';
 import { StrobeOverlay } from './components/StrobeOverlay';
+import { TextOverlay } from './components/TextOverlay';
 import { TransitionOverlay } from './components/TransitionOverlay';
 import { useDirectorStore } from './director/directorStore';
 import { useKeyboardDesk } from './director/useKeyboardDesk';
@@ -25,6 +26,7 @@ function App() {
       <ShortcutMap />
       <StrobeOverlay />
       <TransitionOverlay />
+      <TextOverlay />
       <div className="scene-badge" data-testid="scene-name">
         {preset.name} · {activePresetId + 1}/{PRESETS.length} · playlist {PLAYLIST.length}
       </div>

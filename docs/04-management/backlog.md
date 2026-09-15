@@ -40,6 +40,7 @@
 | VJLAB-23 | Text overlay global effect (editable, animated) | Feature | Medium | E06 | M5 | New |
 | VJLAB-24 | Strobe speed configuration | Feature | Medium | E06 | M5 | New |
 | VJLAB-25 | Global effects pack (VHS glitch, RGB split, mirror, shake, pixelate, grain, beat flash) | Feature | Low | E06 | M5 | New |
+| VJLAB-26 | Layout-independent keymap aliases + visible mix bars | UX fix | High | E06 | M5 | New |
 
 ## Dependencies
 
