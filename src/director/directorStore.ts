@@ -22,6 +22,11 @@ interface DirectorState {
   mixVignette: number;
   mixStrobe: number;
   masterMix: number;
+  overlayText: string;
+  overlayVisible: boolean;
+  overlayKey: number;
+  meshTextureUrl: string | null;
+  meshTextureStatus: 'idle' | 'loading' | 'ready' | 'error';
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
@@ -37,6 +42,13 @@ interface DirectorState {
   cycleFxSlot: () => void;
   fxUp: () => void;
   fxDown: () => void;
+  setOverlayText: (text: string) => void;
+  fireText: () => void;
+  hideText: () => void;
+  setMeshTexture: (url: string | null) => void;
+  setMeshTextureStatus: (
+    status: 'idle' | 'loading' | 'ready' | 'error',
+  ) => void;
 }
 
 /**
@@ -56,6 +68,11 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   mixVignette: 1,
   mixStrobe: 1,
   masterMix: 1,
+  overlayText: 'VJ LAB',
+  overlayVisible: false,
+  overlayKey: 0,
+  meshTextureUrl: null,
+  meshTextureStatus: 'idle',
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -64,7 +81,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   killAll: () => {
     liveRefs.burstId = 0;
     liveRefs.boost = 0;
-    set({ strobeOn: false, burstCount: 0 });
+    set({ strobeOn: false, burstCount: 0, overlayVisible: false });
   },
   setPreset: (id: number) =>
     set({
@@ -99,6 +116,19 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   cycleDuration: () =>
     set((s) => ({ transitionDuration: nextDuration(s.transitionDuration) })),
   stepHue: () => set((s) => ({ hueShift: (s.hueShift + 1 / 8) % 1 })),
+  setOverlayText: (text: string) =>
+    set({ overlayText: text.slice(0, 60) }),
+  fireText: () =>
+    set((s) => ({
+      overlayVisible: true,
+      overlayKey: s.overlayKey + 1,
+    })),
+  hideText: () => set({ overlayVisible: false }),
+  setMeshTexture: (url: string | null) =>
+    set({ meshTextureUrl: url, meshTextureStatus: url ? 'loading' : 'idle' }),
+  setMeshTextureStatus: (
+    status: 'idle' | 'loading' | 'ready' | 'error',
+  ) => set({ meshTextureStatus: status }),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
@@ -172,13 +202,14 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: '1–6', action: 'Dissolve to preset' },
   { key: 'N / P', action: 'Dissolve next / previous in playlist' },
   { key: 'X', action: 'Hard cut to next preset' },
-  { key: 'T', action: 'Cycle transition duration' },
+  { key: 'Y', action: 'Cycle transition duration' },
+  { key: 'T', action: 'Fire text overlay' },
   { key: 'H', action: 'Step global hue shift' },
   { key: 'Space', action: 'Toggle strobe (default off)' },
   { key: 'B', action: 'Fire burst impulse' },
   { key: 'Arrows', action: 'Nudge camera' },
   { key: '+ / -', action: 'Zoom in / out (damped)' },
-  { key: '\\ (backslash)', action: 'Select effect slot' },
-  { key: '[ / ]', action: 'Effect mix down / up' },
+  { key: 'E', action: 'Select effect slot (\\ also works)' },
+  { key: 'R / F', action: 'Effect mix up / down ([ ] also work)' },
   { key: 'S', action: 'Kill all effects' },
 ];

@@ -40,8 +40,7 @@ describe('directorStore', () => {
     expect(useDirectorStore.getState().hueShift).toBeGreaterThan(0);
   });
 
-  it('zooms within limits and adjusts the selected mix', () => {
-    const store = useDirectorStore.getState();
+  it('zooms within limits and adjusts the selected mix', () => {    const store = useDirectorStore.getState();
     store.zoomIn();
     expect(useDirectorStore.getState().zoomTarget).toBeGreaterThan(1);
     store.zoomOut();
@@ -53,5 +52,32 @@ describe('directorStore', () => {
     expect(useDirectorStore.getState().mixVignette).toBeLessThan(1);
     store.fxUp();
     expect(useDirectorStore.getState().mixVignette).toBeCloseTo(1);
+  });
+
+  it('fires and hides the text overlay', () => {
+    const store = useDirectorStore.getState();
+    store.setOverlayText('Hello VJ');
+    expect(useDirectorStore.getState().overlayText).toBe('Hello VJ');
+    store.fireText();
+    expect(useDirectorStore.getState().overlayVisible).toBe(true);
+    const key = useDirectorStore.getState().overlayKey;
+    store.fireText();
+    expect(useDirectorStore.getState().overlayKey).toBe(key + 1);
+    store.hideText();
+    expect(useDirectorStore.getState().overlayVisible).toBe(false);
+  });
+
+  it('sets and clears the mesh texture', () => {
+    const store = useDirectorStore.getState();
+    store.setMeshTexture('blob:fake-url');
+    expect(useDirectorStore.getState().meshTextureUrl).toBe('blob:fake-url');
+    expect(useDirectorStore.getState().meshTextureStatus).toBe('loading');
+    store.setMeshTextureStatus('ready');
+    expect(useDirectorStore.getState().meshTextureStatus).toBe('ready');
+    store.setMeshTextureStatus('error');
+    expect(useDirectorStore.getState().meshTextureStatus).toBe('error');
+    store.setMeshTexture(null);
+    expect(useDirectorStore.getState().meshTextureUrl).toBeNull();
+    expect(useDirectorStore.getState().meshTextureStatus).toBe('idle');
   });
 });
