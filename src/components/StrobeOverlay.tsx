@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { useDirectorStore } from '../director/directorStore';
-import { clampMix } from '../director/fx';
+import { clampMix, strobeIntervalMs } from '../director/fx';
 
-const FLASH_INTERVAL_MS = 120;
 const FLASH_PEAK = 0.85;
 
 export function StrobeOverlay() {
   const strobeOn = useDirectorStore((s) => s.strobeOn);
   const mixStrobe = useDirectorStore((s) => s.mixStrobe);
   const masterMix = useDirectorStore((s) => s.masterMix);
+  const strobeRateHz = useDirectorStore((s) => s.strobeRateHz);
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,15 +19,18 @@ export function StrobeOverlay() {
       return;
     }
     let visible = false;
-    const id = window.setInterval(() => {
-      visible = !visible;
-      if (node) node.style.opacity = visible ? String(peak) : '0';
-    }, FLASH_INTERVAL_MS);
+    const id = window.setInterval(
+      () => {
+        visible = !visible;
+        if (node) node.style.opacity = visible ? String(peak) : '0';
+      },
+      strobeIntervalMs(strobeRateHz),
+    );
     return () => {
       window.clearInterval(id);
       if (node) node.style.opacity = '0';
     };
-  }, [strobeOn, mixStrobe, masterMix]);
+  }, [strobeOn, mixStrobe, masterMix, strobeRateHz]);
 
   if (!strobeOn) return null;
 

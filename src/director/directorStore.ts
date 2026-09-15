@@ -2,8 +2,10 @@ import { create } from 'zustand';
 import { PRESET_COUNT } from '../scenes/presets';
 import {
   MIX_STEP,
+  STROBE_DEFAULT_HZ,
   ZOOM_STEP,
   clampMix,
+  clampStrobeHz,
   clampZoom,
   nextFxSlot,
   type FxSlot,
@@ -22,6 +24,10 @@ interface DirectorState {
   mixVignette: number;
   mixStrobe: number;
   masterMix: number;
+  strobeRateHz: number;
+  vhsOn: boolean;
+  rgbOn: boolean;
+  beatFlashOn: boolean;
   overlayText: string;
   overlayVisible: boolean;
   overlayKey: number;
@@ -42,6 +48,11 @@ interface DirectorState {
   cycleFxSlot: () => void;
   fxUp: () => void;
   fxDown: () => void;
+  strobeFaster: () => void;
+  strobeSlower: () => void;
+  toggleVhs: () => void;
+  toggleRgb: () => void;
+  toggleBeatFlash: () => void;
   setOverlayText: (text: string) => void;
   fireText: () => void;
   hideText: () => void;
@@ -68,6 +79,10 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   mixVignette: 1,
   mixStrobe: 1,
   masterMix: 1,
+  strobeRateHz: STROBE_DEFAULT_HZ,
+  vhsOn: false,
+  rgbOn: false,
+  beatFlashOn: false,
   overlayText: 'VJ LAB',
   overlayVisible: false,
   overlayKey: 0,
@@ -81,7 +96,14 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   killAll: () => {
     liveRefs.burstId = 0;
     liveRefs.boost = 0;
-    set({ strobeOn: false, burstCount: 0, overlayVisible: false });
+    set({
+      strobeOn: false,
+      burstCount: 0,
+      overlayVisible: false,
+      vhsOn: false,
+      rgbOn: false,
+      beatFlashOn: false,
+    });
   },
   setPreset: (id: number) =>
     set({
@@ -129,6 +151,13 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   setMeshTextureStatus: (
     status: 'idle' | 'loading' | 'ready' | 'error',
   ) => set({ meshTextureStatus: status }),
+  strobeFaster: () =>
+    set((s) => ({ strobeRateHz: clampStrobeHz(s.strobeRateHz + 1) })),
+  strobeSlower: () =>
+    set((s) => ({ strobeRateHz: clampStrobeHz(s.strobeRateHz - 1) })),
+  toggleVhs: () => set((s) => ({ vhsOn: !s.vhsOn })),
+  toggleRgb: () => set((s) => ({ rgbOn: !s.rgbOn })),
+  toggleBeatFlash: () => set((s) => ({ beatFlashOn: !s.beatFlashOn })),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
@@ -211,5 +240,9 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: '+ / -', action: 'Zoom in / out (damped)' },
   { key: 'E', action: 'Select effect slot (\\ also works)' },
   { key: 'R / F', action: 'Effect mix up / down ([ ] also work)' },
+  { key: ', / .', action: 'Strobe speed down / up' },
+  { key: 'V', action: 'Toggle VHS glitch' },
+  { key: 'C', action: 'Toggle RGB split' },
+  { key: 'J', action: 'Toggle beat flash' },
   { key: 'S', action: 'Kill all effects' },
 ];

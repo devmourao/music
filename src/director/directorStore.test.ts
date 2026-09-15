@@ -54,8 +54,7 @@ describe('directorStore', () => {
     expect(useDirectorStore.getState().mixVignette).toBeCloseTo(1);
   });
 
-  it('fires and hides the text overlay', () => {
-    const store = useDirectorStore.getState();
+  it('fires and hides the text overlay', () => {    const store = useDirectorStore.getState();
     store.setOverlayText('Hello VJ');
     expect(useDirectorStore.getState().overlayText).toBe('Hello VJ');
     store.fireText();
@@ -79,5 +78,25 @@ describe('directorStore', () => {
     store.setMeshTexture(null);
     expect(useDirectorStore.getState().meshTextureUrl).toBeNull();
     expect(useDirectorStore.getState().meshTextureStatus).toBe('idle');
+  });
+
+  it('tunes strobe rate and toggles the effects pack', () => {
+    const store = useDirectorStore.getState();
+    expect(useDirectorStore.getState().strobeRateHz).toBe(4);
+    store.strobeFaster();
+    expect(useDirectorStore.getState().strobeRateHz).toBe(5);
+    store.strobeSlower();
+    store.strobeSlower();
+    expect(useDirectorStore.getState().strobeRateHz).toBe(3);
+    store.toggleVhs();
+    store.toggleRgb();
+    store.toggleBeatFlash();
+    expect(useDirectorStore.getState().vhsOn).toBe(true);
+    expect(useDirectorStore.getState().rgbOn).toBe(true);
+    expect(useDirectorStore.getState().beatFlashOn).toBe(true);
+    store.killAll();
+    expect(useDirectorStore.getState().vhsOn).toBe(false);
+    expect(useDirectorStore.getState().rgbOn).toBe(false);
+    expect(useDirectorStore.getState().beatFlashOn).toBe(false);
   });
 });

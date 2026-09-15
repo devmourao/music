@@ -33,3 +33,19 @@ export function zoomRadius(baseRadius: number, zoom: number): number {
 export function nextFxSlot(current: FxSlot): FxSlot {
   return FX_SLOTS[(FX_SLOTS.indexOf(current) + 1) % FX_SLOTS.length];
 }
+
+export const STROBE_MIN_HZ = 1;
+
+export const STROBE_MAX_HZ = 12;
+
+export const STROBE_DEFAULT_HZ = 4;
+
+export function clampStrobeHz(value: number): number {
+  if (Number.isNaN(value)) return STROBE_DEFAULT_HZ;
+  return Math.max(STROBE_MIN_HZ, Math.min(STROBE_MAX_HZ, Math.round(value)));
+}
+
+/** Half-cycle interval for a toggle-based strobe at the given rate. */
+export function strobeIntervalMs(rateHz: number): number {
+  return 1000 / (clampStrobeHz(rateHz) * 2);
+}
