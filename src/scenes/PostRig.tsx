@@ -24,6 +24,7 @@ export function PostRig() {
   const colorContrast = useDirectorStore((s) => s.colorContrast);
   const vhsOn = useDirectorStore((s) => s.vhsOn);
   const rgbOn = useDirectorStore((s) => s.rgbOn);
+  const liteOn = useDirectorStore((s) => s.liteOn);
   const fxBypassed = useDirectorStore((s) => s.fxBypassed);
 
   if (fxBypassed) return null;
@@ -39,7 +40,7 @@ export function PostRig() {
         intensity={applyMix(BLOOM_BASE, mixBloom, masterMix)}
         luminanceThreshold={0.75}
         luminanceSmoothing={0.2}
-        mipmapBlur
+        mipmapBlur={!liteOn}
       />
       <Vignette
         darkness={applyMix(VIGNETTE_BASE, mixVignette, masterMix)}

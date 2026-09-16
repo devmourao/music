@@ -108,6 +108,18 @@ describe('directorStore', () => {
     expect(useDirectorStore.getState().fxBypassed).toBe(false);
   });
 
+  it('toggles about and lite mode', () => {
+    expect(useDirectorStore.getState().aboutOpen).toBe(false);
+    useDirectorStore.getState().toggleAbout();
+    expect(useDirectorStore.getState().aboutOpen).toBe(true);
+    useDirectorStore.getState().toggleAbout();
+    expect(useDirectorStore.getState().liteOn).toBe(false);
+    useDirectorStore.getState().toggleLite();
+    expect(useDirectorStore.getState().liteOn).toBe(true);
+    useDirectorStore.getState().toggleLite();
+    expect(useDirectorStore.getState().liteOn).toBe(false);
+  });
+
   it('cycles strobe mode and adjusts saturation and contrast slots', () => {    const store = useDirectorStore.getState();
     expect(useDirectorStore.getState().strobeMode).toBe('white');
     store.cycleStrobeMode();

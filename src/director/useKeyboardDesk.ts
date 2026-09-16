@@ -100,6 +100,15 @@ export function useKeyboardDesk() {
         case 'Digit0':
           store.toggleFxBypass();
           break;
+        case 'KeyI':
+          store.toggleAbout();
+          break;
+        case 'KeyL':
+          store.toggleLite();
+          break;
+        case 'Escape':
+          if (store.aboutOpen) store.toggleAbout();
+          break;
         case 'Space':
           event.preventDefault();
           store.toggleStrobe();

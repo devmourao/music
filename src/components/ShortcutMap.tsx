@@ -44,6 +44,7 @@ export function ShortcutMap() {
   const rgbOn = useDirectorStore((s) => s.rgbOn);
   const beatFlashOn = useDirectorStore((s) => s.beatFlashOn);
   const fxBypassed = useDirectorStore((s) => s.fxBypassed);
+  const liteOn = useDirectorStore((s) => s.liteOn);
   const mixes: Record<FxSlot, number> = {
     bloom: mixBloom,
     vignette: mixVignette,
@@ -73,7 +74,8 @@ export function ShortcutMap() {
         {vhsOn ? ' · VHS' : ''}
         {rgbOn ? ' · RGB' : ''}
         {beatFlashOn ? ' · BEAT' : ''}
-        {fxBypassed ? ' · BYPASS' : ''} · S kills all
+        {fxBypassed ? ' · BYPASS' : ''}
+        {liteOn ? ' · LITE' : ''} · S kills all
       </span>
       <div className="mix-bars" data-testid="mix-bars">
         {SLOT_ORDER.map((slot) => (
