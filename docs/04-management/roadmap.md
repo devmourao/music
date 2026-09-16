@@ -41,12 +41,19 @@ Strategic evolution from blank stage to public MVP. Each phase has a clear exit 
 * Dependencies: Phase 4.
 * Exit: public URL + `v0.1.0` tag.
 
-### Phase 6 — Live Control v0.2.0 (planned)
+### Phase 6 — Live Control v0.2.0
 
 * Objective: industry-standard live desk on top of the shipped MVP.
 * Expected result: A/B transitions, palette system, continuous zoom, effect dry/wet, image texture on mesh, animated text overlay, strobe speed, global effects pack.
 * Dependencies: Phase 5 released.
 * Exit: v0.2.0 tag with live-control demo.
+
+### Phase 7 — Stage Control v0.3.0 (planned)
+
+* Objective: performance-ready control for live presentation without overwriting the existing keyboard desk.
+* Expected result: panel visibility modes (docked / detached popup / hidden via U), fullscreen output (F11 + G alias), auto-pilot tour (A toggle, timed palette / camera / zoom / scene progression with guardrails).
+* Dependencies: Phase 6 released (M6 closed).
+* Exit: v0.3.0 tag with stage-control demo and updated keymap; no shortcut overlap verified in `useKeyboardDesk.ts`.
 
 ## Out of Roadmap (Future Evolution)
 

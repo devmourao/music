@@ -32,8 +32,33 @@
 * Expected evidence: URL, tag, release notes.
 * Approver: Owner.
 
+## M5 — Live Control 0.2.0
+
+* Objective: industry-standard live desk on top of the shipped MVP.
+* Expected deliveries: A/B transitions, palette system, continuous zoom, effect dry/wet, image texture on mesh, animated text overlay, strobe speed, global effects pack.
+* Completion criteria: preset-driven direction with mix bars; transitions and palettes validated on live audio; release gate green.
+* Expected evidence: demo video, keymap reference.
+* Approver: Owner.
+
+## M6 — Polish 0.2.1
+
+* Objective: identity and weak-GPU safety closing the portfolio release.
+* Expected deliveries: strobe modes, metadata module and version seal, About panel, lite mode with pixel-ratio and effect caps, rename and branding.
+* Completion criteria: seal shows real version; About lists author links; lite mode visibly relieves weak GPUs; docs in sync.
+* Expected evidence: deployed URL, release notes v0.2.1.
+* Approver: Owner.
+
+## M7 — Stage Control 0.3.0
+
+* Objective: performance-ready stage control without breaking the existing keyboard desk.
+* Expected deliveries: panel visibility modes (docked / detached popup / hidden), fullscreen output, auto-pilot tour with timed transitions.
+* Completion criteria: U cycles panel states without overwriting any shortcut in `useKeyboardDesk.ts`; G/F11 enters fullscreen and coordinates with hidden panel; A toggles auto-pilot and respects post-processing isolation (no UV / convolution conflict); architecture and docs remain in sync.
+* Expected evidence: keymap delta, stage control demo.
+* Approver: Owner.
+
 ## Revision History
 
 | Version | Date | Change |
 | ------- | ---- | ------ |
 | 0.1.0 | 2026-09-11 | Initial milestones |
+| 0.2.1 | 2026-09-16 | Add M5 Live Control, M6 Polish, M7 Stage Control for panel / fullscreen / auto-pilot |

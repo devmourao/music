@@ -11,6 +11,7 @@
 * E05 — Factory, playlist and release
 * E06 — Live Control v0.2.0 (industry desk: transitions, palettes, zoom, mix, image, text, global effects)
 * E07 — Polish and identity v0.2.1 (color, strobe modes, site metadata, rename)
+* E08 — Stage Control v0.3.0 (panel modes, fullscreen output, auto-pilot tour)
 
 ## Items
 
@@ -52,6 +53,9 @@
 | VJLAB-34 | Package version follows releases (seal shows real version) | Fix | Small | E07 | M6 | New |
 | VJLAB-35 | Post-chain freeze when combining VHS and chromatic aberration | Bug | High | E07 | M6 | New |
 | VJLAB-36 | Industry-standard post-effect labels in UI and keymap | UX | Small | E07 | M6 | New |
+| VJLAB-37 | Panel visibility modes — docked / detached popup / hidden (cycle via U, no overlap with existing desk) | Feature | Medium | E08 | M7 | New |
+| VJLAB-38 | Fullscreen output — native F11 plus G alias with safe exit and hidden-panel coordination | Feature | Medium | E08 | M7 | New |
+| VJLAB-39 | Auto-pilot tour — timed palette / camera / zoom / scene tour with pause and audio-reactive guardrails | Feature | Medium | E08 | M7 | New |
 
 ## Dependencies
 
