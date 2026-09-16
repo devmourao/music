@@ -122,6 +122,20 @@ export function useKeyboardDesk() {
         case 'KeyS':
           store.killAll();
           break;
+        case 'KeyU':
+          store.cyclePanelMode();
+          break;
+        case 'KeyG':
+        case 'F11':
+          {
+            const el = document.documentElement;
+            if (!document.fullscreenElement) {
+              void el.requestFullscreen().catch(() => {});
+            } else {
+              void document.exitFullscreen().catch(() => {});
+            }
+          }
+          break;
         case 'ArrowLeft':
           event.preventDefault();
           liveRefs.azimuth -= CAMERA_STEP;
