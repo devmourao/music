@@ -5,7 +5,8 @@ describe('siteMeta', () => {
   it('exposes project identity with a semver version', () => {
     expect(SITE_META.name).toBe('VJ Lab');
     expect(SITE_META.version).toMatch(/^\d+\.\d+\.\d+$/);
-    expect(SITE_META.repoUrl).toContain('github.com/devmourao/music');
+    expect(SITE_META.repoUrl).toContain('github.com/devmourao/vjlab');
+    expect(SITE_META.demoUrl).toBe('https://vjlab.mourao.info');
   });
 
   it('exposes owner contact links', () => {

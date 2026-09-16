@@ -48,6 +48,7 @@
 | VJLAB-30 | Site metadata module + version seal + About panel | Feature | Small | E06 | M6 | New |
 | VJLAB-31 | Rename repo and domain music to vjlab | Chore | Small | E07 | M6 | New |
 | VJLAB-32 | Beat flash color treatment (washed on saturated palettes) | UX fix | Small | E06 | M6 | New |
+| VJLAB-33 | Product wordmark and custom favicon for brand identity | Design | Small | E07 | M6 | New |
 
 ## Dependencies
 
