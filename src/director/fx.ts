@@ -1,5 +1,6 @@
-export const ZOOM_MIN = 0.5;
+import type { ScenePalette } from '../scenes/presets';
 
+export const ZOOM_MIN = 0.5;
 export const ZOOM_MAX = 2.5;
 
 export const ZOOM_STEP = 0.15;
@@ -89,4 +90,34 @@ export function clampStrobeHz(value: number): number {
 /** Half-cycle interval for a toggle-based strobe at the given rate. */
 export function strobeIntervalMs(rateHz: number): number {
   return 1000 / (clampStrobeHz(rateHz) * 2);
+}
+
+/** Relative luminance of a #rrggbb color per WCAG (0 for black, 1 for white). */
+export function relativeLuminance(hex: string): number {
+  const match = /^#([0-9a-fA-F]{6})$/.exec(hex.trim());
+  if (!match) return Number.NaN;
+  const channels = [0, 2, 4].map((offset) => {
+    const srgb = parseInt(match[1].slice(offset, offset + 2), 16) / 255;
+    return srgb <= 0.04045 ? srgb / 12.92 : Math.pow((srgb + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
+
+/**
+ * Primaries lighter than this veil saturated scenes white, so the flash
+ * falls back to the deep emissive tone of the same palette.
+ */
+export const BEAT_FLASH_LUMINANCE_CUTOFF = 0.4;
+
+/**
+ * Flash color for the beat overlay. Light primaries resolve to the palette
+ * emissive tone (a colored pulse instead of a white wash); dark primaries
+ * and malformed values keep the legacy primary behavior.
+ */
+export function beatFlashColor(palette: ScenePalette): string {
+  const luminance = relativeLuminance(palette.primary);
+  if (Number.isNaN(luminance) || luminance <= BEAT_FLASH_LUMINANCE_CUTOFF) {
+    return palette.primary;
+  }
+  return palette.emissive;
 }

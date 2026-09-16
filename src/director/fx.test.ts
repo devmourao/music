@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { PRESETS } from '../scenes/presets';
 import {
   applyMix,
+  beatFlashColor,
   clampContrast,
   clampMix,
   clampSaturation,
@@ -8,6 +10,7 @@ import {
   clampZoom,
   nextFxSlot,
   nextStrobeMode,
+  relativeLuminance,
   strobeIntervalMs,
   zoomRadius,
 } from './fx';
@@ -59,5 +62,31 @@ describe('fx mixes', () => {
   it('keeps the original four slots cycling in order', () => {
     expect(nextFxSlot('master')).toBe('saturation');
     expect(nextFxSlot('contrast')).toBe('bloom');
+  });
+});
+
+describe('beat flash color', () => {
+  it('computes WCAG relative luminance', () => {
+    expect(relativeLuminance('#ffffff')).toBeCloseTo(1);
+    expect(relativeLuminance('#000000')).toBeCloseTo(0);
+    expect(relativeLuminance('not-a-color')).toBeNaN();
+  });
+
+  it('resolves shipped light primaries to the deep emissive tone', () => {
+    for (const preset of PRESETS) {
+      expect(beatFlashColor(preset.palette)).toBe(preset.palette.emissive);
+    }
+  });
+
+  it('keeps dark primaries as-is', () => {
+    expect(
+      beatFlashColor({ primary: '#0a0618', emissive: '#6d28d9' }),
+    ).toBe('#0a0618');
+  });
+
+  it('falls back to primary for malformed colors', () => {
+    expect(
+      beatFlashColor({ primary: 'not-a-color', emissive: '#6d28d9' }),
+    ).toBe('not-a-color');
   });
 });

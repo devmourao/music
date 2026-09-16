@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { readBands } from '../audio/audioBus';
 import { useDirectorStore } from '../director/directorStore';
-import { clampMix } from '../director/fx';
+import { beatFlashColor, clampMix } from '../director/fx';
 import { getPreset } from '../scenes/presets';
 
 const BEAT_PEAK = 0.7;
@@ -19,7 +19,7 @@ export function BeatFlashOverlay() {
     }
     node?.style.setProperty(
       'background',
-      getPreset(useDirectorStore.getState().activePresetId).palette.primary,
+      beatFlashColor(getPreset(useDirectorStore.getState().activePresetId).palette),
     );
     let raf = 0;
     const tick = () => {
