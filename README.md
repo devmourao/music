@@ -2,7 +2,7 @@
 
 Interactive web-based Video Jockeying instrument and audio-reactive generative art. Drop a local `.mp3` and play three live 3D scenes from the keyboard.
 
-Live demo:  https://vjlab.netlify.app/
+Live demo: https://vjlab.mourao.info
 
 ## Features
 

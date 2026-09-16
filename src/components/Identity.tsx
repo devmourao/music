@@ -5,7 +5,7 @@ export function Seal() {
   return (
     <a
       className="seal"
-      href={SITE_META.repoUrl}
+      href={SITE_META.demoUrl}
       target="_blank"
       rel="noreferrer"
       data-testid="seal"
@@ -29,13 +29,13 @@ export function AboutPanel() {
         <p>Stack: {SITE_META.stack.join(' · ')}</p>
         <ul>
           <li>
-            <a href={SITE_META.repoUrl} target="_blank" rel="noreferrer">
-              Repository
+            <a href={SITE_META.demoUrl} target="_blank" rel="noreferrer">
+              {new URL(SITE_META.demoUrl).hostname}
             </a>
           </li>
           <li>
-            <a href={SITE_META.demoUrl} target="_blank" rel="noreferrer">
-              Live demo
+            <a href={SITE_META.repoUrl} target="_blank" rel="noreferrer">
+              Repository
             </a>
           </li>
           <li>
