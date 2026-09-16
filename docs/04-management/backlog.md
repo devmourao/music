@@ -10,6 +10,7 @@
 * E04 — VJ desk and effects
 * E05 — Factory, playlist and release
 * E06 — Live Control v0.2.0 (industry desk: transitions, palettes, zoom, mix, image, text, global effects)
+* E07 — Polish and identity v0.2.1 (color, strobe modes, site metadata, rename)
 
 ## Items
 
@@ -44,6 +45,9 @@
 | VJLAB-27 | Stronger color controls (future reflection) | Research | Low | E06 | M6 | New |
 | VJLAB-28 | Strobe modes white/black/color flash | Feature | Medium | E06 | M6 | New |
 | VJLAB-29 | Lite performance mode (pixel ratio + effect caps for weak GPUs) | Feature | Medium | E06 | M6 | New |
+| VJLAB-30 | Site metadata module + version seal + About panel | Feature | Small | E06 | M6 | New |
+| VJLAB-31 | Rename repo and domain music to vjlab | Chore | Small | E07 | M6 | New |
+| VJLAB-32 | Beat flash color treatment (washed on saturated palettes) | UX fix | Small | E06 | M6 | New |
 
 ## Dependencies
 
