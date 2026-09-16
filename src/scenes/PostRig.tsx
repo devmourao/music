@@ -10,7 +10,14 @@ import {
 } from '@react-three/postprocessing';
 import { GlitchMode } from 'postprocessing';
 import { useDirectorStore } from '../director/directorStore';
-import { applyMix } from '../director/fx';
+import {
+  applyMix,
+  CHROMATIC_OFFSET_OFF,
+  CHROMATIC_OFFSET_ON,
+  GLITCH_DELAY,
+  GLITCH_DURATION,
+  GLITCH_STRENGTH,
+} from '../director/fx';
 
 const BLOOM_BASE = 0.6;
 const VIGNETTE_BASE = 0.55;
@@ -33,9 +40,13 @@ export function PostRig() {
     <EffectComposer multisampling={0}>
       <HueSaturation hue={hueShift * Math.PI * 2} saturation={colorSaturation} />
       <BrightnessContrast contrast={colorContrast} />
-      {rgbOn && (
-        <ChromaticAberration offset={[0.004, 0.002]} radialModulation modulationOffset={0.4} />
-      )}
+      {/* Always mounted: toggling swaps a live uniform instead of
+          re-chaining composer passes mid-performance. */}
+      <ChromaticAberration
+        offset={rgbOn ? CHROMATIC_OFFSET_ON : CHROMATIC_OFFSET_OFF}
+        radialModulation
+        modulationOffset={0.4}
+      />
       <Bloom
         intensity={applyMix(BLOOM_BASE, mixBloom, masterMix)}
         luminanceThreshold={0.75}
@@ -46,15 +57,15 @@ export function PostRig() {
         darkness={applyMix(VIGNETTE_BASE, mixVignette, masterMix)}
         offset={0.25}
       />
-      {vhsOn && (
-        <Glitch
-          delay={[1.5, 3.5]}
-          duration={[0.2, 0.6]}
-          strength={[0.2, 0.5]}
-          mode={GlitchMode.SPORADIC}
-          active
-        />
-      )}
+      {/* Always mounted: the heaviest pass compiles once at startup and
+          toggles via its active flag instead of remounting. */}
+      <Glitch
+        delay={GLITCH_DELAY}
+        duration={GLITCH_DURATION}
+        strength={GLITCH_STRENGTH}
+        mode={GlitchMode.SPORADIC}
+        active={vhsOn}
+      />
       {vhsOn && <Scanline density={1.25} />}
     </EffectComposer>
   );
