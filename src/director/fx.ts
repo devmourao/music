@@ -121,3 +121,22 @@ export function beatFlashColor(palette: ScenePalette): string {
   }
   return palette.emissive;
 }
+
+/**
+ * Chromatic aberration offsets. OFF is a zero vector (a visual no-op), so
+ * toggling swaps a live uniform instead of mounting a new composer pass
+ * mid-performance.
+ */
+export const CHROMATIC_OFFSET_ON: [number, number] = [0.004, 0.002];
+
+export const CHROMATIC_OFFSET_OFF: [number, number] = [0, 0];
+
+/**
+ * VHS glitch timing in seconds. Hoisted to module scope so the effect props
+ * keep stable values across renders.
+ */
+export const GLITCH_DELAY: [number, number] = [1.5, 3.5];
+
+export const GLITCH_DURATION: [number, number] = [0.2, 0.6];
+
+export const GLITCH_STRENGTH: [number, number] = [0.2, 0.5];

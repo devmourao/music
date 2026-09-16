@@ -3,11 +3,16 @@ import { PRESETS } from '../scenes/presets';
 import {
   applyMix,
   beatFlashColor,
+  CHROMATIC_OFFSET_OFF,
+  CHROMATIC_OFFSET_ON,
   clampContrast,
   clampMix,
   clampSaturation,
   clampStrobeHz,
   clampZoom,
+  GLITCH_DELAY,
+  GLITCH_DURATION,
+  GLITCH_STRENGTH,
   nextFxSlot,
   nextStrobeMode,
   relativeLuminance,
@@ -88,5 +93,18 @@ describe('beat flash color', () => {
     expect(
       beatFlashColor({ primary: 'not-a-color', emissive: '#6d28d9' }),
     ).toBe('not-a-color');
+  });
+});
+
+describe('post pass stability', () => {
+  it('keeps the shipped chromatic aberration tuning', () => {
+    expect(CHROMATIC_OFFSET_ON).toEqual([0.004, 0.002]);
+    expect(CHROMATIC_OFFSET_OFF).toEqual([0, 0]);
+  });
+
+  it('keeps the shipped VHS glitch timing', () => {
+    expect(GLITCH_DELAY).toEqual([1.5, 3.5]);
+    expect(GLITCH_DURATION).toEqual([0.2, 0.6]);
+    expect(GLITCH_STRENGTH).toEqual([0.2, 0.5]);
   });
 });
