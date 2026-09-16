@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useDirectorStore } from '../director/directorStore';
 import { clampMix, strobeIntervalMs } from '../director/fx';
+import { getPreset } from '../scenes/presets';
 
 const FLASH_PEAK = 0.85;
 
@@ -9,6 +10,8 @@ export function StrobeOverlay() {
   const mixStrobe = useDirectorStore((s) => s.mixStrobe);
   const masterMix = useDirectorStore((s) => s.masterMix);
   const strobeRateHz = useDirectorStore((s) => s.strobeRateHz);
+  const strobeMode = useDirectorStore((s) => s.strobeMode);
+  const activePresetId = useDirectorStore((s) => s.activePresetId);
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,6 +21,13 @@ export function StrobeOverlay() {
       if (node) node.style.opacity = '0';
       return;
     }
+    const flashColor =
+      strobeMode === 'black'
+        ? '#000000'
+        : strobeMode === 'color'
+          ? getPreset(activePresetId).palette.primary
+          : '#ffffff';
+    if (node) node.style.background = flashColor;
     let visible = false;
     const id = window.setInterval(
       () => {
@@ -30,7 +40,7 @@ export function StrobeOverlay() {
       window.clearInterval(id);
       if (node) node.style.opacity = '0';
     };
-  }, [strobeOn, mixStrobe, masterMix, strobeRateHz]);
+  }, [strobeOn, mixStrobe, masterMix, strobeRateHz, strobeMode, activePresetId]);
 
   if (!strobeOn) return null;
 

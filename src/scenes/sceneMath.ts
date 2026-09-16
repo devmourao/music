@@ -35,3 +35,11 @@ export function wrapRingZ(z: number): number {
   if (wrapped < farZ) wrapped += span;
   return wrapped;
 }
+
+export const BURST_DECAY_RATE = 3;
+
+/** Frame-rate independent decay for the live burst impulse. */
+export function decayBurst(value: number, delta: number): number {
+  const safeDelta = Math.max(0, Math.min(0.1, delta));
+  return value * Math.exp(-BURST_DECAY_RATE * safeDelta);
+}

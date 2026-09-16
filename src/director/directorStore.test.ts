@@ -80,8 +80,7 @@ describe('directorStore', () => {
     expect(useDirectorStore.getState().meshTextureStatus).toBe('idle');
   });
 
-  it('tunes strobe rate and toggles the effects pack', () => {
-    const store = useDirectorStore.getState();
+    it('tunes strobe rate and toggles the effects pack', () => {    const store = useDirectorStore.getState();
     expect(useDirectorStore.getState().strobeRateHz).toBe(4);
     store.strobeFaster();
     expect(useDirectorStore.getState().strobeRateHz).toBe(5);
@@ -98,5 +97,51 @@ describe('directorStore', () => {
     expect(useDirectorStore.getState().vhsOn).toBe(false);
     expect(useDirectorStore.getState().rgbOn).toBe(false);
     expect(useDirectorStore.getState().beatFlashOn).toBe(false);
+    expect(useDirectorStore.getState().fxBypassed).toBe(false);
+  });
+
+  it('toggles the post-processing bypass', () => {
+    expect(useDirectorStore.getState().fxBypassed).toBe(false);
+    useDirectorStore.getState().toggleFxBypass();
+    expect(useDirectorStore.getState().fxBypassed).toBe(true);
+    useDirectorStore.getState().toggleFxBypass();
+    expect(useDirectorStore.getState().fxBypassed).toBe(false);
+  });
+
+  it('cycles strobe mode and adjusts saturation and contrast slots', () => {    const store = useDirectorStore.getState();
+    expect(useDirectorStore.getState().strobeMode).toBe('white');
+    store.cycleStrobeMode();
+    expect(useDirectorStore.getState().strobeMode).toBe('black');
+    store.setPreset(0);
+    useDirectorStore.getState().setPreset(0);
+    const api = useDirectorStore.getState();
+    api.setPreset(0);
+    // Select saturation slot directly through the cycle order.
+    while (useDirectorStore.getState().selectedFx !== 'saturation') {
+      useDirectorStore.getState().cycleFxSlot();
+    }
+    const before = useDirectorStore.getState().colorSaturation;
+    useDirectorStore.getState().fxUp();
+    expect(useDirectorStore.getState().colorSaturation).toBeGreaterThanOrEqual(
+      before,
+    );
+    while (useDirectorStore.getState().selectedFx !== 'contrast') {
+      useDirectorStore.getState().cycleFxSlot();
+    }
+    useDirectorStore.getState().fxDown();
+    expect(useDirectorStore.getState().colorContrast).toBeLessThanOrEqual(1);
+  });
+
+  it('selects mix slots directly and clamps color ranges', () => {
+    const api = useDirectorStore.getState();
+    api.selectFxSlot('saturation');
+    expect(useDirectorStore.getState().selectedFx).toBe('saturation');
+    for (let i = 0; i < 12; i += 1) useDirectorStore.getState().fxUp();
+    expect(useDirectorStore.getState().colorSaturation).toBe(0.6);
+    api.selectFxSlot('contrast');
+    for (let i = 0; i < 12; i += 1) useDirectorStore.getState().fxDown();
+    expect(useDirectorStore.getState().colorContrast).toBe(-0.5);
+    for (let i = 0; i < 12; i += 1) useDirectorStore.getState().fxUp();
+    expect(useDirectorStore.getState().colorContrast).toBe(0.5);
   });
 });

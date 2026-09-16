@@ -1,14 +1,20 @@
 import { create } from 'zustand';
 import { PRESET_COUNT } from '../scenes/presets';
 import {
+  CONTRAST_DEFAULT,
   MIX_STEP,
+  SATURATION_DEFAULT,
   STROBE_DEFAULT_HZ,
   ZOOM_STEP,
+  clampContrast,
   clampMix,
+  clampSaturation,
   clampStrobeHz,
   clampZoom,
   nextFxSlot,
+  nextStrobeMode,
   type FxSlot,
+  type StrobeMode,
 } from './fx';
 import { DEFAULT_TRANSITION_DURATION, nextDuration } from './transition';
 
@@ -25,9 +31,13 @@ interface DirectorState {
   mixStrobe: number;
   masterMix: number;
   strobeRateHz: number;
+  strobeMode: StrobeMode;
+  colorSaturation: number;
+  colorContrast: number;
   vhsOn: boolean;
   rgbOn: boolean;
   beatFlashOn: boolean;
+  fxBypassed: boolean;
   overlayText: string;
   overlayVisible: boolean;
   overlayKey: number;
@@ -46,13 +56,16 @@ interface DirectorState {
   zoomIn: () => void;
   zoomOut: () => void;
   cycleFxSlot: () => void;
+  selectFxSlot: (slot: FxSlot) => void;
   fxUp: () => void;
   fxDown: () => void;
   strobeFaster: () => void;
   strobeSlower: () => void;
+  cycleStrobeMode: () => void;
   toggleVhs: () => void;
   toggleRgb: () => void;
   toggleBeatFlash: () => void;
+  toggleFxBypass: () => void;
   setOverlayText: (text: string) => void;
   fireText: () => void;
   hideText: () => void;
@@ -80,9 +93,13 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   mixStrobe: 1,
   masterMix: 1,
   strobeRateHz: STROBE_DEFAULT_HZ,
+  strobeMode: 'white',
+  colorSaturation: SATURATION_DEFAULT,
+  colorContrast: CONTRAST_DEFAULT,
   vhsOn: false,
   rgbOn: false,
   beatFlashOn: false,
+  fxBypassed: false,
   overlayText: 'VJ LAB',
   overlayVisible: false,
   overlayKey: 0,
@@ -91,6 +108,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
+    liveRefs.boost = 1;
     set((s) => ({ burstCount: s.burstCount + 1 }));
   },
   killAll: () => {
@@ -103,6 +121,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
       vhsOn: false,
       rgbOn: false,
       beatFlashOn: false,
+      fxBypassed: false,
     });
   },
   setPreset: (id: number) =>
@@ -158,6 +177,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   toggleVhs: () => set((s) => ({ vhsOn: !s.vhsOn })),
   toggleRgb: () => set((s) => ({ rgbOn: !s.rgbOn })),
   toggleBeatFlash: () => set((s) => ({ beatFlashOn: !s.beatFlashOn })),
+  toggleFxBypass: () => set((s) => ({ fxBypassed: !s.fxBypassed })),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
@@ -166,18 +186,29 @@ export const useDirectorStore = create<DirectorState>((set) => ({
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget - ZOOM_STEP) }));
   },
   cycleFxSlot: () => set((s) => ({ selectedFx: nextFxSlot(s.selectedFx) })),
+  selectFxSlot: (slot: FxSlot) => set({ selectedFx: slot }),
+  cycleStrobeMode: () =>
+    set((s) => ({ strobeMode: nextStrobeMode(s.strobeMode) })),
   fxUp: () =>
     set((s) => {
-      const value = (key: FxSlot) =>
-        clampMix(
-          (key === 'bloom'
-            ? s.mixBloom
-            : key === 'vignette'
-              ? s.mixVignette
-              : key === 'strobe'
-                ? s.mixStrobe
-                : s.masterMix) + MIX_STEP,
-        );
+      const read = (key: FxSlot): number =>
+        key === 'bloom'
+          ? s.mixBloom
+          : key === 'vignette'
+            ? s.mixVignette
+            : key === 'strobe'
+              ? s.mixStrobe
+              : key === 'master'
+                ? s.masterMix
+                : key === 'saturation'
+                  ? s.colorSaturation
+                  : s.colorContrast;
+      const value = (key: FxSlot): number =>
+        key === 'contrast'
+          ? clampContrast(read(key) + MIX_STEP)
+          : key === 'saturation'
+            ? clampSaturation(read(key) + MIX_STEP)
+            : clampMix(read(key) + MIX_STEP);
       return {
         mixBloom: s.selectedFx === 'bloom' ? value('bloom') : s.mixBloom,
         mixVignette:
@@ -186,20 +217,34 @@ export const useDirectorStore = create<DirectorState>((set) => ({
           s.selectedFx === 'strobe' ? value('strobe') : s.mixStrobe,
         masterMix:
           s.selectedFx === 'master' ? value('master') : s.masterMix,
+        colorSaturation:
+          s.selectedFx === 'saturation'
+            ? value('saturation')
+            : s.colorSaturation,
+        colorContrast:
+          s.selectedFx === 'contrast' ? value('contrast') : s.colorContrast,
       };
     }),
   fxDown: () =>
     set((s) => {
-      const value = (key: FxSlot) =>
-        clampMix(
-          (key === 'bloom'
-            ? s.mixBloom
-            : key === 'vignette'
-              ? s.mixVignette
-              : key === 'strobe'
-                ? s.mixStrobe
-                : s.masterMix) - MIX_STEP,
-        );
+      const read = (key: FxSlot): number =>
+        key === 'bloom'
+          ? s.mixBloom
+          : key === 'vignette'
+            ? s.mixVignette
+            : key === 'strobe'
+              ? s.mixStrobe
+              : key === 'master'
+                ? s.masterMix
+                : key === 'saturation'
+                  ? s.colorSaturation
+                  : s.colorContrast;
+      const value = (key: FxSlot): number =>
+        key === 'contrast'
+          ? clampContrast(read(key) - MIX_STEP)
+          : key === 'saturation'
+            ? clampSaturation(read(key) - MIX_STEP)
+            : clampMix(read(key) - MIX_STEP);
       return {
         mixBloom: s.selectedFx === 'bloom' ? value('bloom') : s.mixBloom,
         mixVignette:
@@ -208,6 +253,12 @@ export const useDirectorStore = create<DirectorState>((set) => ({
           s.selectedFx === 'strobe' ? value('strobe') : s.mixStrobe,
         masterMix:
           s.selectedFx === 'master' ? value('master') : s.masterMix,
+        colorSaturation:
+          s.selectedFx === 'saturation'
+            ? value('saturation')
+            : s.colorSaturation,
+        colorContrast:
+          s.selectedFx === 'contrast' ? value('contrast') : s.colorContrast,
       };
     }),
 }));
@@ -235,14 +286,16 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: 'T', action: 'Fire text overlay' },
   { key: 'H', action: 'Step global hue shift' },
   { key: 'Space', action: 'Toggle strobe (default off)' },
+  { key: 'O', action: 'Cycle strobe mode (white/black/color)' },
   { key: 'B', action: 'Fire burst impulse' },
   { key: 'Arrows', action: 'Nudge camera' },
   { key: '+ / -', action: 'Zoom in / out (damped)' },
-  { key: 'E', action: 'Select effect slot (\\ also works)' },
-  { key: 'R / F', action: 'Effect mix up / down ([ ] also work)' },
+  { key: 'E / ]', action: 'Select effect slot' },
+  { key: 'R / F (´ [)', action: 'Effect mix up / down' },
   { key: ', / .', action: 'Strobe speed down / up' },
   { key: 'V', action: 'Toggle VHS glitch' },
   { key: 'C', action: 'Toggle RGB split' },
   { key: 'J', action: 'Toggle beat flash' },
+  { key: '0', action: 'Bypass all post-processing' },
   { key: 'S', action: 'Kill all effects' },
 ];

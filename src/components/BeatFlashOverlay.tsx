@@ -2,11 +2,13 @@ import { useEffect, useRef } from 'react';
 import { readBands } from '../audio/audioBus';
 import { useDirectorStore } from '../director/directorStore';
 import { clampMix } from '../director/fx';
+import { getPreset } from '../scenes/presets';
 
-const BEAT_PEAK = 0.45;
+const BEAT_PEAK = 0.7;
 
 export function BeatFlashOverlay() {
   const beatFlashOn = useDirectorStore((s) => s.beatFlashOn);
+  const activePresetId = useDirectorStore((s) => s.activePresetId);
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,13 +17,18 @@ export function BeatFlashOverlay() {
       if (node) node.style.opacity = '0';
       return;
     }
+    node?.style.setProperty(
+      'background',
+      getPreset(useDirectorStore.getState().activePresetId).palette.primary,
+    );
     let raf = 0;
     const tick = () => {
       const { masterMix } = useDirectorStore.getState();
       const { bass } = readBands();
       if (node) {
+        // Quadratic response: only real kicks punch through.
         node.style.opacity = String(
-          bass * BEAT_PEAK * clampMix(masterMix),
+          bass * bass * BEAT_PEAK * clampMix(masterMix),
         );
       }
       raf = requestAnimationFrame(tick);
@@ -31,7 +38,7 @@ export function BeatFlashOverlay() {
       cancelAnimationFrame(raf);
       if (node) node.style.opacity = '0';
     };
-  }, [beatFlashOn]);
+  }, [beatFlashOn, activePresetId]);
 
   if (!beatFlashOn) return null;
 

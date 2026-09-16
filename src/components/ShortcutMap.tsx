@@ -1,7 +1,29 @@
 import { SHORTCUT_MAP, useDirectorStore } from '../director/directorStore';
-import type { FxSlot } from '../director/fx';
+import {
+  CONTRAST_MAX,
+  CONTRAST_MIN,
+  SATURATION_MAX,
+  type FxSlot,
+} from '../director/fx';
 
-const SLOT_ORDER: FxSlot[] = ['bloom', 'vignette', 'strobe', 'master'];
+const SLOT_ORDER: FxSlot[] = [
+  'saturation',
+  'contrast',
+  'bloom',
+  'vignette',
+  'strobe',
+  'master',
+];
+
+function slotFraction(slot: FxSlot, value: number): number {
+  if (slot === 'contrast') {
+    return (value - CONTRAST_MIN) / (CONTRAST_MAX - CONTRAST_MIN);
+  }
+  if (slot === 'saturation') {
+    return value / SATURATION_MAX;
+  }
+  return value;
+}
 
 export function ShortcutMap() {
   const strobeOn = useDirectorStore((s) => s.strobeOn);
@@ -14,15 +36,21 @@ export function ShortcutMap() {
   const mixVignette = useDirectorStore((s) => s.mixVignette);
   const mixStrobe = useDirectorStore((s) => s.mixStrobe);
   const masterMix = useDirectorStore((s) => s.masterMix);
+  const colorSaturation = useDirectorStore((s) => s.colorSaturation);
+  const colorContrast = useDirectorStore((s) => s.colorContrast);
+  const strobeMode = useDirectorStore((s) => s.strobeMode);
   const strobeRateHz = useDirectorStore((s) => s.strobeRateHz);
   const vhsOn = useDirectorStore((s) => s.vhsOn);
   const rgbOn = useDirectorStore((s) => s.rgbOn);
   const beatFlashOn = useDirectorStore((s) => s.beatFlashOn);
+  const fxBypassed = useDirectorStore((s) => s.fxBypassed);
   const mixes: Record<FxSlot, number> = {
     bloom: mixBloom,
     vignette: mixVignette,
     strobe: mixStrobe,
     master: masterMix,
+    saturation: colorSaturation,
+    contrast: colorContrast,
   };
   const selectedValue = mixes[selectedFx];
 
@@ -37,28 +65,44 @@ export function ShortcutMap() {
         ))}
       </ul>
       <span data-testid="desk-status">
-        strobe {strobeOn ? `ON ${strobeRateHz}Hz` : 'off'} · bursts{' '}
+        strobe {strobeMode} {strobeRateHz}Hz {strobeOn ? 'ON' : 'off'} ·
+        bursts{' '}
         {burstCount} · fx {transitionDuration.toFixed(1)}s · hue{' '}
         {Math.round(hueShift * 8)}/8 · zoom {zoomTarget.toFixed(2)}x ·{' '}
         {selectedFx} {selectedValue.toFixed(1)}
         {vhsOn ? ' · VHS' : ''}
         {rgbOn ? ' · RGB' : ''}
-        {beatFlashOn ? ' · BEAT' : ''} · S kills all
+        {beatFlashOn ? ' · BEAT' : ''}
+        {fxBypassed ? ' · BYPASS' : ''} · S kills all
       </span>
       <div className="mix-bars" data-testid="mix-bars">
         {SLOT_ORDER.map((slot) => (
           <div
             key={slot}
+            role="button"
+            tabIndex={0}
+            onClick={() => useDirectorStore.getState().selectFxSlot(slot)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                useDirectorStore.getState().selectFxSlot(slot);
+              }
+            }}
             className={slot === selectedFx ? 'mix-row selected' : 'mix-row'}
           >
             <span>{slot}</span>
             <div className="mix-track">
               <div
                 className="mix-fill"
-                style={{ width: `${Math.round(mixes[slot] * 100)}%` }}
+                style={{
+                  width: `${Math.round(slotFraction(slot, mixes[slot]) * 100)}%`,
+                }}
               />
             </div>
-            <span>{mixes[slot].toFixed(1)}</span>
+            <span>
+              {slot === 'contrast' || slot === 'saturation'
+                ? mixes[slot].toFixed(2)
+                : mixes[slot].toFixed(1)}
+            </span>
           </div>
         ))}
       </div>

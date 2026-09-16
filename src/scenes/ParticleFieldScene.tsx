@@ -2,7 +2,8 @@ import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { readBands } from '../audio/audioBus';
-import { PARTICLE_COUNT, particleScale } from './sceneMath';
+import { liveRefs } from '../director/directorStore';
+import { PARTICLE_COUNT, decayBurst, particleScale } from './sceneMath';
 
 export function ParticleFieldScene({
   color = '#7dd3fc',
@@ -28,12 +29,13 @@ export function ParticleFieldScene({
   );
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
     const mesh = meshRef.current;
     if (!mesh) return;
     const { bass, mids, treble } = readBands();
+    liveRefs.boost = decayBurst(liveRefs.boost, delta);
     const time = clock.elapsedTime;
-    const groupPulse = 1 + bass * 0.35 * gain;
+    const groupPulse = 1 + bass * 0.35 * gain + liveRefs.boost * 0.6;
     const size = particleScale(treble);
 
     for (let i = 0; i < PARTICLE_COUNT; i += 1) {
@@ -52,7 +54,11 @@ export function ParticleFieldScene({
   });
 
   return (
-    <instancedMesh ref={meshRef} args={[undefined, undefined, PARTICLE_COUNT]}>
+    <instancedMesh
+      ref={meshRef}
+      args={[undefined, undefined, PARTICLE_COUNT]}
+      frustumCulled={false}
+    >
       <sphereGeometry args={[0.06, 8, 8]} />
       <meshStandardMaterial color={color} emissive={emissive} emissiveIntensity={1.2} />
     </instancedMesh>
