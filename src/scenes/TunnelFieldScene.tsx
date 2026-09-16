@@ -2,7 +2,8 @@ import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { readBands } from '../audio/audioBus';
-import { RING_COUNT, RING_SPACING, wrapRingZ } from './sceneMath';
+import { liveRefs } from '../director/directorStore';
+import { RING_COUNT, RING_SPACING, decayBurst, wrapRingZ } from './sceneMath';
 
 export function TunnelFieldScene({
   color = '#22d3ee',
@@ -36,6 +37,7 @@ export function TunnelFieldScene({
     const group = groupRef.current;
     if (!group) return;
     const { bass, mids, treble } = readBands();
+    liveRefs.boost = decayBurst(liveRefs.boost, delta);
     const time = clock.elapsedTime;
     const speedBase = (2 + mids * 7) * speed;
     const span = RING_COUNT * RING_SPACING;
@@ -45,7 +47,7 @@ export function TunnelFieldScene({
       ring.position.z = wrapRingZ(offsets[i] + ((time * speedBase) % span));
     });
 
-    group.scale.setScalar(1 + bass * 0.3 * gain);
+    group.scale.setScalar(1 + bass * 0.3 * gain + liveRefs.boost * 0.5);
     material.color.setHSL((0.55 + treble * 0.45 + time * 0.02) % 1, 0.9, 0.6);
     material.emissive.setHSL((0.55 + treble * 0.45) % 1, 0.9, 0.35);
   });

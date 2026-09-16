@@ -6,9 +6,22 @@ export const ZOOM_STEP = 0.15;
 
 export const MIX_STEP = 0.1;
 
-export type FxSlot = 'bloom' | 'vignette' | 'strobe' | 'master';
+export type FxSlot =
+  | 'bloom'
+  | 'vignette'
+  | 'strobe'
+  | 'master'
+  | 'saturation'
+  | 'contrast';
 
-export const FX_SLOTS: FxSlot[] = ['bloom', 'vignette', 'strobe', 'master'];
+export const FX_SLOTS: FxSlot[] = [
+  'saturation',
+  'contrast',
+  'bloom',
+  'vignette',
+  'strobe',
+  'master',
+];
 
 export function clampMix(value: number): number {
   if (Number.isNaN(value)) return 0;
@@ -18,6 +31,34 @@ export function clampMix(value: number): number {
 export function clampZoom(value: number): number {
   if (Number.isNaN(value)) return 1;
   return Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, value));
+}
+
+export const CONTRAST_MIN = -0.5;
+
+export const CONTRAST_MAX = 0.5;
+
+export const CONTRAST_DEFAULT = 0;
+
+export const SATURATION_MAX = 0.6;
+
+export const SATURATION_DEFAULT = 0;
+
+export function clampSaturation(value: number): number {
+  if (Number.isNaN(value)) return SATURATION_DEFAULT;
+  return Math.max(0, Math.min(SATURATION_MAX, value));
+}
+
+export function clampContrast(value: number): number {
+  if (Number.isNaN(value)) return CONTRAST_DEFAULT;
+  return Math.max(CONTRAST_MIN, Math.min(CONTRAST_MAX, value));
+}
+
+export type StrobeMode = 'white' | 'black' | 'color';
+
+export const STROBE_MODES: StrobeMode[] = ['white', 'black', 'color'];
+
+export function nextStrobeMode(current: StrobeMode): StrobeMode {
+  return STROBE_MODES[(STROBE_MODES.indexOf(current) + 1) % STROBE_MODES.length];
 }
 
 /** Effective amount of an effect after its own mix and the master fader. */

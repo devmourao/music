@@ -1,5 +1,6 @@
 import {
   Bloom,
+  BrightnessContrast,
   ChromaticAberration,
   EffectComposer,
   Glitch,
@@ -19,12 +20,18 @@ export function PostRig() {
   const mixBloom = useDirectorStore((s) => s.mixBloom);
   const mixVignette = useDirectorStore((s) => s.mixVignette);
   const masterMix = useDirectorStore((s) => s.masterMix);
+  const colorSaturation = useDirectorStore((s) => s.colorSaturation);
+  const colorContrast = useDirectorStore((s) => s.colorContrast);
   const vhsOn = useDirectorStore((s) => s.vhsOn);
   const rgbOn = useDirectorStore((s) => s.rgbOn);
+  const fxBypassed = useDirectorStore((s) => s.fxBypassed);
+
+  if (fxBypassed) return null;
 
   return (
     <EffectComposer multisampling={0}>
-      <HueSaturation hue={hueShift * Math.PI * 2} saturation={0.15} />
+      <HueSaturation hue={hueShift * Math.PI * 2} saturation={colorSaturation} />
+      <BrightnessContrast contrast={colorContrast} />
       {rgbOn && (
         <ChromaticAberration offset={[0.004, 0.002]} radialModulation modulationOffset={0.4} />
       )}
