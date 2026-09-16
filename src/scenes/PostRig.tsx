@@ -57,15 +57,18 @@ export function PostRig() {
         darkness={applyMix(VIGNETTE_BASE, mixVignette, masterMix)}
         offset={0.25}
       />
-      {/* Always mounted: the heaviest pass compiles once at startup and
-          toggles via its active flag instead of remounting. */}
-      <Glitch
-        delay={GLITCH_DELAY}
-        duration={GLITCH_DURATION}
-        strength={GLITCH_STRENGTH}
-        mode={GlitchMode.SPORADIC}
-        active={vhsOn}
-      />
+      {/* Conditional mount: GlitchEffect transforms UVs and the library
+          rejects sharing a pass with convolution effects (Bloom), so it
+          must keep mounting after them into its own pass. */}
+      {vhsOn && (
+        <Glitch
+          delay={GLITCH_DELAY}
+          duration={GLITCH_DURATION}
+          strength={GLITCH_STRENGTH}
+          mode={GlitchMode.SPORADIC}
+          active
+        />
+      )}
       {vhsOn && <Scanline density={1.25} />}
     </EffectComposer>
   );
