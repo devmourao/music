@@ -49,6 +49,9 @@
 | VJLAB-31 | Rename repo and domain music to vjlab | Chore | Small | E07 | M6 | New |
 | VJLAB-32 | Beat flash color treatment (washed on saturated palettes) | UX fix | Small | E06 | M6 | New |
 | VJLAB-33 | Product wordmark and custom favicon for brand identity | Design | Small | E07 | M6 | New |
+| VJLAB-34 | Package version follows releases (seal shows real version) | Fix | Small | E07 | M6 | New |
+| VJLAB-35 | Post-chain freeze when combining VHS and chromatic aberration | Bug | High | E07 | M6 | New |
+| VJLAB-36 | Industry-standard post-effect labels in UI and keymap | UX | Small | E07 | M6 | New |
 
 ## Dependencies
 
