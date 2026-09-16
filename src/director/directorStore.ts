@@ -18,6 +18,8 @@ import {
 } from './fx';
 import { DEFAULT_TRANSITION_DURATION, nextDuration } from './transition';
 
+export type PanelMode = 'docked' | 'detached' | 'hidden';
+
 interface DirectorState {
   strobeOn: boolean;
   burstCount: number;
@@ -45,6 +47,7 @@ interface DirectorState {
   overlayKey: number;
   meshTextureUrl: string | null;
   meshTextureStatus: 'idle' | 'loading' | 'ready' | 'error';
+  panelMode: PanelMode;
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
@@ -77,6 +80,8 @@ interface DirectorState {
   setMeshTextureStatus: (
     status: 'idle' | 'loading' | 'ready' | 'error',
   ) => void;
+  cyclePanelMode: () => void;
+  setPanelMode: (mode: PanelMode) => void;
 }
 
 /**
@@ -111,6 +116,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   overlayKey: 0,
   meshTextureUrl: null,
   meshTextureStatus: 'idle',
+  panelMode: 'docked',
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -186,6 +192,16 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   toggleFxBypass: () => set((s) => ({ fxBypassed: !s.fxBypassed })),
   toggleAbout: () => set((s) => ({ aboutOpen: !s.aboutOpen })),
   toggleLite: () => set((s) => ({ liteOn: !s.liteOn })),
+  cyclePanelMode: () =>
+    set((s) => ({
+      panelMode:
+        s.panelMode === 'docked'
+          ? 'detached'
+          : s.panelMode === 'detached'
+            ? 'hidden'
+            : 'docked',
+    })),
+  setPanelMode: (mode: PanelMode) => set({ panelMode: mode }),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
@@ -308,4 +324,6 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: 'I', action: 'Toggle About panel' },
   { key: 'L', action: 'Toggle lite mode' },
   { key: 'S', action: 'Kill all effects' },
+  { key: 'U', action: 'Cycle panel visibility (docked / detached / hidden)' },
+  { key: 'G / F11', action: 'Toggle fullscreen output' },
 ];
