@@ -3,6 +3,7 @@ import {
   BrightnessContrast,
   ChromaticAberration,
   EffectComposer,
+  EffectGroup,
   Glitch,
   HueSaturation,
   Scanline,
@@ -57,10 +58,10 @@ export function PostRig() {
         darkness={applyMix(VIGNETTE_BASE, mixVignette, masterMix)}
         offset={0.25}
       />
-      {/* Conditional mount: GlitchEffect transforms UVs and the library
-          rejects sharing a pass with convolution effects (Bloom), so it
-          must keep mounting after them into its own pass. */}
-      {vhsOn && (
+      {/* Own pass: GlitchEffect transforms UVs and the library rejects
+          sharing a pass with convolution effects (Bloom). The group stays
+          mounted and toggles via enabled, so no pass re-chaining either. */}
+      <EffectGroup enabled={vhsOn}>
         <Glitch
           delay={GLITCH_DELAY}
           duration={GLITCH_DURATION}
@@ -68,8 +69,8 @@ export function PostRig() {
           mode={GlitchMode.SPORADIC}
           active
         />
-      )}
-      {vhsOn && <Scanline density={1.25} />}
+        <Scanline density={1.25} />
+      </EffectGroup>
     </EffectComposer>
   );
 }
