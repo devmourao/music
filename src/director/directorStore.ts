@@ -38,6 +38,8 @@ interface DirectorState {
   rgbOn: boolean;
   beatFlashOn: boolean;
   fxBypassed: boolean;
+  aboutOpen: boolean;
+  liteOn: boolean;
   overlayText: string;
   overlayVisible: boolean;
   overlayKey: number;
@@ -66,6 +68,8 @@ interface DirectorState {
   toggleRgb: () => void;
   toggleBeatFlash: () => void;
   toggleFxBypass: () => void;
+  toggleAbout: () => void;
+  toggleLite: () => void;
   setOverlayText: (text: string) => void;
   fireText: () => void;
   hideText: () => void;
@@ -100,6 +104,8 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   rgbOn: false,
   beatFlashOn: false,
   fxBypassed: false,
+  aboutOpen: false,
+  liteOn: false,
   overlayText: 'VJ LAB',
   overlayVisible: false,
   overlayKey: 0,
@@ -178,6 +184,8 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   toggleRgb: () => set((s) => ({ rgbOn: !s.rgbOn })),
   toggleBeatFlash: () => set((s) => ({ beatFlashOn: !s.beatFlashOn })),
   toggleFxBypass: () => set((s) => ({ fxBypassed: !s.fxBypassed })),
+  toggleAbout: () => set((s) => ({ aboutOpen: !s.aboutOpen })),
+  toggleLite: () => set((s) => ({ liteOn: !s.liteOn })),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
@@ -297,5 +305,7 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: 'C', action: 'Toggle RGB split' },
   { key: 'J', action: 'Toggle beat flash' },
   { key: '0', action: 'Bypass all post-processing' },
+  { key: 'I', action: 'Toggle About panel' },
+  { key: 'L', action: 'Toggle lite mode' },
   { key: 'S', action: 'Kill all effects' },
 ];

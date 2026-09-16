@@ -3,6 +3,7 @@ import './App.css';
 import { useAudioEngine } from './audio/useAudioEngine';
 import { AudioPanel } from './components/AudioPanel';
 import { BeatFlashOverlay } from './components/BeatFlashOverlay';
+import { AboutPanel, Seal } from './components/Identity';
 import { ShortcutMap } from './components/ShortcutMap';
 import { StrobeOverlay } from './components/StrobeOverlay';
 import { TextOverlay } from './components/TextOverlay';
@@ -19,6 +20,7 @@ function App() {
   const engine = useAudioEngine();
   useKeyboardDesk();
   const activePresetId = useDirectorStore((s) => s.activePresetId);
+  const liteOn = useDirectorStore((s) => s.liteOn);
   const preset = getPreset(activePresetId);
 
   return (
@@ -29,10 +31,14 @@ function App() {
       <BeatFlashOverlay />
       <TransitionOverlay />
       <TextOverlay />
+      <AboutPanel />
+      <Seal />
       <div className="scene-badge" data-testid="scene-name">
-        {preset.name} · {activePresetId + 1}/{PRESETS.length} · playlist {PLAYLIST.length}
+        {preset.name} · {activePresetId + 1}/{PRESETS.length} · playlist{' '}
+        {PLAYLIST.length}
+        {liteOn ? ' · LITE' : ''}
       </div>
-      <Canvas camera={{ position: CAMERA_POSITION }}>
+      <Canvas dpr={liteOn ? 1 : [1, 2]} camera={{ position: CAMERA_POSITION }}>
         <color attach="background" args={[preset.background]} />
         <ambientLight intensity={1} />
         <CameraRig />
