@@ -48,6 +48,7 @@ interface DirectorState {
   meshTextureUrl: string | null;
   meshTextureStatus: 'idle' | 'loading' | 'ready' | 'error';
   panelMode: PanelMode;
+  autoPilotOn: boolean;
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
@@ -82,6 +83,7 @@ interface DirectorState {
   ) => void;
   cyclePanelMode: () => void;
   setPanelMode: (mode: PanelMode) => void;
+  toggleAutoPilot: () => void;
 }
 
 /**
@@ -117,6 +119,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   meshTextureUrl: null,
   meshTextureStatus: 'idle',
   panelMode: 'docked',
+  autoPilotOn: false,
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -202,6 +205,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
             : 'docked',
     })),
   setPanelMode: (mode: PanelMode) => set({ panelMode: mode }),
+  toggleAutoPilot: () => set((s) => ({ autoPilotOn: !s.autoPilotOn })),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
@@ -326,4 +330,5 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: 'S', action: 'Kill all effects' },
   { key: 'U', action: 'Cycle panel visibility (docked / detached / hidden)' },
   { key: 'G / F11', action: 'Toggle fullscreen output' },
+  { key: 'A', action: 'Toggle auto-pilot tour' },
 ];

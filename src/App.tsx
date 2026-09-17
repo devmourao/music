@@ -10,6 +10,7 @@ import { StrobeOverlay } from './components/StrobeOverlay';
 import { TextOverlay } from './components/TextOverlay';
 import { TransitionOverlay } from './components/TransitionOverlay';
 import { useDirectorStore } from './director/directorStore';
+import { useAutoPilot } from './director/useAutoPilot';
 import { useKeyboardDesk } from './director/useKeyboardDesk';
 import { CameraRig } from './scenes/CameraRig';
 import { PostRig } from './scenes/PostRig';
@@ -20,9 +21,11 @@ import { CAMERA_POSITION } from './stageConfig';
 function App() {
   const engine = useAudioEngine();
   useKeyboardDesk();
+  useAutoPilot();
   const activePresetId = useDirectorStore((s) => s.activePresetId);
   const liteOn = useDirectorStore((s) => s.liteOn);
   const panelMode = useDirectorStore((s) => s.panelMode);
+  const autoPilotOn = useDirectorStore((s) => s.autoPilotOn);
   const preset = getPreset(activePresetId);
   const popupRef = useRef<Window | null>(null);
 
@@ -97,6 +100,7 @@ function App() {
         {PLAYLIST.length}
         {liteOn ? ' · LITE' : ''}
         {panelMode !== 'docked' ? ` · ${panelMode.toUpperCase()}` : ''}
+        {autoPilotOn ? ' · AUTO' : ''}
       </div>
       <Canvas dpr={liteOn ? 1 : [1, 2]} camera={{ position: CAMERA_POSITION }}>
         <color attach="background" args={[preset.background]} />
