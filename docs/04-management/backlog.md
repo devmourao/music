@@ -11,7 +11,7 @@
 * E05 — Factory, playlist and release
 * E06 — Live Control v0.2.0 (industry desk: transitions, palettes, zoom, mix, image, text, global effects)
 * E07 — Polish and identity v0.2.1 (color, strobe modes, site metadata, rename)
-* E08 — Stage Control v0.3.0 (panel modes, fullscreen output, auto-pilot tour)
+* E08 — Stage Control v0.3.0 (panel modes, fullscreen output, auto-pilot tour, desk status HUD)
 
 ## Items
 
@@ -56,6 +56,9 @@
 | VJLAB-37 | Panel visibility modes — docked / detached popup / hidden (cycle via U, no overlap with existing desk) | Feature | Medium | E08 | M7 | New |
 | VJLAB-38 | Fullscreen output — native F11 plus G alias with safe exit and hidden-panel coordination | Feature | Medium | E08 | M7 | New |
 | VJLAB-39 | Auto-pilot tour — timed palette / camera / zoom / scene tour with pause and audio-reactive guardrails | Feature | Medium | E08 | M7 | New |
+| VJLAB-40 | Desk status pills and mode color — VHS/RGB/BEAT/BYPASS/LITE and strobe mode as color-coded pills | Enhancement | Medium | E08 | M7 | New |
+| VJLAB-41 | Desk mini-bars for continuous params — strobe Hz, zoom, hue and transition duration as bars reusing mix-track | Enhancement | Medium | E08 | M7 | New |
+| VJLAB-42 | Desk grouping and burst badge — grouped sections, burst counter badge, remove master duplication | Enhancement | Medium | E08 | M7 | New |
 
 ## Dependencies
 
@@ -77,3 +80,4 @@
 | ------- | ---- | ------ |
 | 0.1.0 | 2026-09-11 | Initial backlog |
 | 0.2.0 | 2026-09-12 | Add E06 Live Control v0.2.0 (VJLAB-18 to VJLAB-25) |
+| 0.3.0 | 2026-09-16 | Add VJLAB-40/41/42 desk HUD enhancements (E08 M7) |
