@@ -45,6 +45,7 @@ export function ShortcutMap() {
   const beatFlashOn = useDirectorStore((s) => s.beatFlashOn);
   const fxBypassed = useDirectorStore((s) => s.fxBypassed);
   const liteOn = useDirectorStore((s) => s.liteOn);
+  const autoPilotOn = useDirectorStore((s) => s.autoPilotOn);
   const mixes: Record<FxSlot, number> = {
     bloom: mixBloom,
     vignette: mixVignette,
@@ -66,17 +67,24 @@ export function ShortcutMap() {
         ))}
       </ul>
       <span data-testid="desk-status">
-        strobe {strobeMode} {strobeRateHz}Hz {strobeOn ? 'ON' : 'off'} ·
-        bursts{' '}
-        {burstCount} · fx {transitionDuration.toFixed(1)}s · hue{' '}
+        bursts {burstCount} · fx {transitionDuration.toFixed(1)}s · hue{' '}
         {Math.round(hueShift * 8)}/8 · zoom {zoomTarget.toFixed(2)}x ·{' '}
-        {selectedFx} {selectedValue.toFixed(1)}
-        {vhsOn ? ' · VHS' : ''}
-        {rgbOn ? ' · RGB' : ''}
-        {beatFlashOn ? ' · BEAT' : ''}
-        {fxBypassed ? ' · BYPASS' : ''}
-        {liteOn ? ' · LITE' : ''} · S kills all
+        {selectedFx} {selectedValue.toFixed(1)} · S kills all
       </span>
+      <div className="desk-pills" data-testid="desk-pills">
+        <span
+          className={`pill pill-strobe pill-${strobeMode} ${strobeOn ? 'on' : 'off'}`}
+          title={`Strobe ${strobeMode} ${strobeRateHz}Hz`}
+        >
+          STROBE {strobeMode} {strobeRateHz}Hz {strobeOn ? 'ON' : 'off'}
+        </span>
+        <span className={`pill ${vhsOn ? 'on pill-vhs' : 'off'}`}>VHS</span>
+        <span className={`pill ${rgbOn ? 'on pill-rgb' : 'off'}`}>RGB</span>
+        <span className={`pill ${beatFlashOn ? 'on pill-beat' : 'off'}`}>BEAT</span>
+        <span className={`pill ${fxBypassed ? 'on pill-bypass' : 'off'}`}>BYPASS</span>
+        <span className={`pill ${liteOn ? 'on pill-lite' : 'off'}`}>LITE</span>
+        <span className={`pill ${autoPilotOn ? 'on pill-auto' : 'off'}`}>AUTO</span>
+      </div>
       <div className="mix-bars" data-testid="mix-bars">
         {SLOT_ORDER.map((slot) => (
           <div

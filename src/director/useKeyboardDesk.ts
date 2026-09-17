@@ -136,6 +136,9 @@ export function useKeyboardDesk() {
             }
           }
           break;
+        case 'KeyA':
+          store.toggleAutoPilot();
+          break;
         case 'ArrowLeft':
           event.preventDefault();
           liveRefs.azimuth -= CAMERA_STEP;
