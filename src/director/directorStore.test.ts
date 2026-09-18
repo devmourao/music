@@ -22,9 +22,9 @@ describe('directorStore', () => {
   it('requests dissolves and hard cuts without touching the preset early', () => {
     const store = useDirectorStore.getState();
     store.setPreset(0);
-    store.requestDissolve(3);
+    store.requestDissolve(2);
     expect(transitionRef.active).toBe(true);
-    expect(transitionRef.to).toBe(3);
+    expect(transitionRef.to).toBe(2);
     expect(useDirectorStore.getState().activePresetId).toBe(0);
     store.hardCutNext();
     expect(transitionRef.active).toBe(false);

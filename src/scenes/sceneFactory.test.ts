@@ -27,8 +27,8 @@ describe('scene factory helpers', () => {
   });
 
   it('switches presets by id', () => {
-    useDirectorStore.getState().setPreset(5);
-    expect(useDirectorStore.getState().activePresetId).toBe(5);
+    useDirectorStore.getState().setPreset(2);
+    expect(useDirectorStore.getState().activePresetId).toBe(2);
     useDirectorStore.getState().setPreset(0);
     expect(useDirectorStore.getState().activePresetId).toBe(0);
     useDirectorStore.getState().nextPreset();

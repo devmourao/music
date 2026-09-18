@@ -307,7 +307,7 @@ export const transitionRef = {
 };
 
 export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
-  { key: '1–6', action: 'Dissolve to preset' },
+  { key: '1–3', action: 'Dissolve to preset' },
   { key: 'N / P', action: 'Dissolve next / previous in playlist' },
   { key: 'X', action: 'Hard cut to next preset' },
   { key: 'Y', action: 'Cycle transition duration' },
