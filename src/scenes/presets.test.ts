@@ -8,8 +8,8 @@ import {
 } from './presets';
 
 describe('presets', () => {
-  it('defines four presets on valid scenes', () => {
-    expect(PRESETS).toHaveLength(4);
+  it('defines five presets on valid scenes', () => {
+    expect(PRESETS).toHaveLength(5);
     for (const preset of PRESETS) {
       expect([0, 1, 2]).toContain(preset.scene);
       expect(preset.gain).toBeGreaterThan(0);
@@ -17,7 +17,7 @@ describe('presets', () => {
   });
 
   it('covers every preset exactly once in the playlist', () => {
-    expect([...PLAYLIST].sort((a, b) => a - b)).toEqual([0, 1, 2, 3]);
+    expect([...PLAYLIST].sort((a, b) => a - b)).toEqual([0, 1, 2, 3, 4]);
   });
 
   it('gives every preset a dark background', () => {
@@ -27,8 +27,8 @@ describe('presets', () => {
   });
 
   it('wraps preset navigation', () => {
-    expect(nextPresetId(3)).toBe(0);
-    expect(prevPresetId(0)).toBe(3);
-    expect(getPreset(-1).id).toBe(3);
+    expect(nextPresetId(4)).toBe(0);
+    expect(prevPresetId(0)).toBe(4);
+    expect(getPreset(-1).id).toBe(4);
   });
 });
