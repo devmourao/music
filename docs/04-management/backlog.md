@@ -12,6 +12,7 @@
 * E06 — Live Control v0.2.0 (industry desk: transitions, palettes, zoom, mix, image, text, global effects)
 * E07 — Polish and identity v0.2.1 (color, strobe modes, site metadata, rename)
 * E08 — Stage Control v0.3.0 (panel modes, fullscreen output, auto-pilot tour, desk status HUD)
+* E09 — Playlists v0.4.0 (local music queue and effects preset queue)
 
 ## Items
 
@@ -61,6 +62,8 @@
 | VJLAB-42 | Desk grouping and burst badge — grouped sections, burst counter badge, remove master duplication | Enhancement | Medium | E08 | M7 | New |
 | VJLAB-43 | Keyboard ergonomics review — Resolume/VDMX vs VJ Lab shortcut audit and optimization proposal | Research | Medium | E08 | M8 | New |
 | VJLAB-44 | Strobe color reinforcement — swatch, glow and Hz bar tint for strobe mode | Enhancement | Small | E08 | M7 | New |
+| VJLAB-45 | Local music playlist — queue, reorder and load local tracks (session) | Feature | Medium | E09 | M9 | New |
+| VJLAB-46 | Effects preset playlist — queue, reorder and save effect presets as playlist | Feature | Medium | E09 | M9 | New |
 
 ## Dependencies
 
@@ -85,3 +88,4 @@
 | 0.3.0 | 2026-09-16 | Add VJLAB-40/41/42 desk HUD enhancements (E08 M7) |
 | 0.3.1 | 2026-09-16 | Add VJLAB-44 strobe color reinforcement (E08 M7) |
 | 0.3.2 | 2026-09-16 | Add VJLAB-43 keyboard ergonomics review (E08 M8) |
+| 0.4.0 | 2026-09-16 | Add E09 Playlists with VJLAB-45/46 (M9) |
