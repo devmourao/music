@@ -1,4 +1,5 @@
 import { useDirectorStore } from '../director/directorStore';
+import { AvatarScene } from './AvatarScene';
 import { DeformableMeshScene } from './DeformableMeshScene';
 import { GridLedScene } from './GridLedScene';
 import { ParticleFieldScene } from './ParticleFieldScene';
@@ -36,6 +37,15 @@ export function SceneHost() {
         emissive={preset.palette.emissive}
         gain={preset.gain}
         speed={preset.speed}
+      />
+    );
+  if (preset.scene === 4)
+    return (
+      <AvatarScene
+        key={preset.id}
+        color={preset.palette.primary}
+        emissive={preset.palette.emissive}
+        gain={preset.gain}
       />
     );
   return (
