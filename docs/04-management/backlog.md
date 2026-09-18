@@ -59,6 +59,7 @@
 | VJLAB-40 | Desk status pills and mode color — VHS/RGB/BEAT/BYPASS/LITE and strobe mode as color-coded pills | Enhancement | Medium | E08 | M7 | New |
 | VJLAB-41 | Desk mini-bars for continuous params — strobe Hz, zoom, hue and transition duration as bars reusing mix-track | Enhancement | Medium | E08 | M7 | New |
 | VJLAB-42 | Desk grouping and burst badge — grouped sections, burst counter badge, remove master duplication | Enhancement | Medium | E08 | M7 | New |
+| VJLAB-44 | Strobe color reinforcement — swatch, glow and Hz bar tint for strobe mode | Enhancement | Small | E08 | M7 | New |
 
 ## Dependencies
 
@@ -81,3 +82,4 @@
 | 0.1.0 | 2026-09-11 | Initial backlog |
 | 0.2.0 | 2026-09-12 | Add E06 Live Control v0.2.0 (VJLAB-18 to VJLAB-25) |
 | 0.3.0 | 2026-09-16 | Add VJLAB-40/41/42 desk HUD enhancements (E08 M7) |
+| 0.3.1 | 2026-09-16 | Add VJLAB-44 strobe color reinforcement (E08 M7) |
