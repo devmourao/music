@@ -45,7 +45,6 @@ function transportFraction(
 
 export function ShortcutMap() {
   const strobeOn = useDirectorStore((s) => s.strobeOn);
-  const burstCount = useDirectorStore((s) => s.burstCount);
   const transitionDuration = useDirectorStore((s) => s.transitionDuration);
   const hueShift = useDirectorStore((s) => s.hueShift);
   const zoomTarget = useDirectorStore((s) => s.zoomTarget);
@@ -164,7 +163,6 @@ export function ShortcutMap() {
         <div className="desk-group">
           <span className="desk-group-label">FLAGS</span>
           <div className="desk-pills" data-testid="desk-pills">
-            <span className={`pill pill-burst on`}>BURSTS {burstCount}</span>
             <span className={`pill ${vhsOn ? 'on pill-vhs' : 'off'}`}>VHS</span>
             <span className={`pill ${rgbOn ? 'on pill-rgb' : 'off'}`}>RGB</span>
             <span className={`pill ${beatFlashOn ? 'on pill-beat' : 'off'}`}>BEAT</span>

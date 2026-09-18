@@ -71,7 +71,35 @@ export function AudioPanel({ engine }: { engine: AudioEngineApi }) {
           }
         />
       </label>
-      <p className="audio-hint">Open the console to watch the spectrum follow the beat.</p>
+      <div className="spectrum-bars" data-testid="spectrum-bars">
+        <div className="spectrum-row">
+          <span>BASS</span>
+          <div className="mix-track">
+            <div
+              className="mix-fill"
+              style={{ width: `${Math.round(engine.spectrum.bass * 100)}%` }}
+            />
+          </div>
+        </div>
+        <div className="spectrum-row">
+          <span>MIDS</span>
+          <div className="mix-track">
+            <div
+              className="mix-fill"
+              style={{ width: `${Math.round(engine.spectrum.mids * 100)}%` }}
+            />
+          </div>
+        </div>
+        <div className="spectrum-row">
+          <span>TREBLE</span>
+          <div className="mix-track">
+            <div
+              className="mix-fill"
+              style={{ width: `${Math.round(engine.spectrum.treble * 100)}%` }}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
