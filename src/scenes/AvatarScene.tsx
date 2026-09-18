@@ -15,7 +15,7 @@ export function AvatarScene({
   gain?: number;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const edgeMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  const edgeLineMatRef = useRef<THREE.LineBasicMaterial>(null);
   const fillMatRef = useRef<THREE.MeshStandardMaterial>(null);
 
   useFrame(({ clock }, delta) => {
@@ -25,18 +25,19 @@ export function AvatarScene({
     liveRefs.boost = decayBurst(liveRefs.boost, delta);
     const time = clock.elapsedTime;
 
-    // Bounce on bass, sway on mids
-    const bounce = bass * 0.35 * gain + liveRefs.boost * 0.25;
-    const sway = mids * 0.2 + Math.sin(time * 0.6) * 0.03;
-    group.position.y = -0.4 + bounce;
+    // Bounce on bass, sway on mids — more dynamic
+    const bounce = bass * 0.65 * gain + liveRefs.boost * 0.5;
+    const sway = mids * 0.45 + Math.sin(time * 0.7) * 0.08;
+    group.position.y = -0.3 + bounce;
+    group.position.x = Math.sin(time * 0.5) * 0.15 * gain;
     group.rotation.y = sway;
-    group.rotation.z = Math.sin(time * 0.4) * 0.04 * gain;
+    group.rotation.z = Math.sin(time * 0.6) * 0.12 * gain;
+    group.scale.setScalar(1 + bass * 0.18 * gain + liveRefs.boost * 0.12);
 
     // Edge color alternates on treble
-    if (edgeMatRef.current) {
-      const hue = (0.55 + treble * 0.15 + time * 0.02) % 1;
-      edgeMatRef.current.color.setHSL(hue, 0.9, 0.5);
-      edgeMatRef.current.emissive.setHSL(hue, 0.9, 0.35);
+    if (edgeLineMatRef.current) {
+      const hue = (0.55 + treble * 0.25 + time * 0.05) % 1;
+      edgeLineMatRef.current.color.setHSL(hue, 1, 0.7);
     }
     if (fillMatRef.current) {
       fillMatRef.current.color.set(color);
@@ -55,7 +56,7 @@ export function AvatarScene({
       </mesh>
       <lineSegments position={[0, 1.35, 0]}>
         <edgesGeometry args={[new THREE.BoxGeometry(0.45, 0.45, 0.45)]} />
-        <lineBasicMaterial ref={edgeMatRef as unknown as React.Ref<THREE.LineBasicMaterial>} color={emissive} />
+        <lineBasicMaterial ref={edgeLineMatRef} color={emissive} linewidth={2} />
       </lineSegments>
       {/* Torso */}
       <mesh position={[0, 0.7, 0]}>
