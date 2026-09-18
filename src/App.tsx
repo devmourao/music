@@ -60,8 +60,12 @@ function App() {
 
   return (
     <div className="stage-container" data-testid="blank-stage">
-      {showDocked && <AudioPanel engine={engine} />}
-      {showDocked && <PresetBuilder />}
+      {showDocked && (
+        <div className="left-stack" data-testid="left-stack">
+          <AudioPanel engine={engine} />
+          <PresetBuilder />
+        </div>
+      )}
       {showDocked && <ShortcutMap />}
       {showDetached && (
         <div
@@ -83,8 +87,10 @@ function App() {
             borderRadius: '12px',
           }}
         >
-          <AudioPanel engine={engine} />
-          <PresetBuilder />
+          <div className="left-stack">
+            <AudioPanel engine={engine} />
+            <PresetBuilder />
+          </div>
           <ShortcutMap />
           <span style={{ color: '#fff', fontSize: 11, opacity: 0.7 }}>
             Detached — press U to cycle (popup fallback if blocked)
