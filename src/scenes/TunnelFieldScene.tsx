@@ -2,7 +2,7 @@ import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { readBands } from '../audio/audioBus';
-import { liveRefs } from '../director/directorStore';
+import { useDirectorStore, liveRefs } from '../director/directorStore';
 import { RING_COUNT, RING_SPACING, decayBurst, wrapRingZ } from './sceneMath';
 
 export function TunnelFieldScene({
@@ -52,14 +52,21 @@ export function TunnelFieldScene({
     material.emissive.setHSL((0.55 + treble * 0.45) % 1, 0.9, 0.35);
   });
 
+  const activePresetId = useDirectorStore((s) => s.activePresetId);
+  const isTri = activePresetId === 3;
+
   return (
     <group ref={groupRef}>
       {offsets.map((z, i) => (
         <mesh key={i} position={[0, 0, z]} material={material}>
-          {i % 2 === 0 ? (
-            <torusGeometry args={[2.6, 0.05, 3, 64]} />
+          {isTri ? (
+            i % 2 === 0 ? (
+              <torusGeometry args={[2.8, 0.09, 8, 3]} />
+            ) : (
+              <torusGeometry args={[2.8, 0.09, 8, 4]} />
+            )
           ) : (
-            <torusGeometry args={[2.6, 0.05, 4, 64]} />
+            <torusGeometry args={[2.6, 0.045, 8, 64]} />
           )}
         </mesh>
       ))}
