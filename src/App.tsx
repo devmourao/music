@@ -3,7 +3,6 @@ import { Canvas } from '@react-three/fiber';
 import './App.css';
 import { useAudioEngine } from './audio/useAudioEngine';
 import { AudioPanel } from './components/AudioPanel';
-import { PresetBuilder } from './components/PresetBuilder';
 import { BeatFlashOverlay } from './components/BeatFlashOverlay';
 import { AboutPanel, Seal } from './components/Identity';
 import { ShortcutMap } from './components/ShortcutMap';
@@ -60,12 +59,7 @@ function App() {
 
   return (
     <div className="stage-container" data-testid="blank-stage">
-      {showDocked && (
-        <div className="left-stack" data-testid="left-stack">
-          <AudioPanel engine={engine} />
-          <PresetBuilder />
-        </div>
-      )}
+      {showDocked && <AudioPanel engine={engine} />}
       {showDocked && <ShortcutMap />}
       {showDetached && (
         <div
@@ -87,10 +81,7 @@ function App() {
             borderRadius: '12px',
           }}
         >
-          <div className="left-stack">
-            <AudioPanel engine={engine} />
-            <PresetBuilder />
-          </div>
+          <AudioPanel engine={engine} />
           <ShortcutMap />
           <span style={{ color: '#fff', fontSize: 11, opacity: 0.7 }}>
             Detached — press U to cycle (popup fallback if blocked)
