@@ -3,8 +3,13 @@ import {
   CONTRAST_MAX,
   CONTRAST_MIN,
   SATURATION_MAX,
+  STROBE_MAX_HZ,
+  STROBE_MIN_HZ,
+  ZOOM_MAX,
+  ZOOM_MIN,
   type FxSlot,
 } from '../director/fx';
+import { TRANSITION_DURATIONS } from '../director/transition';
 
 const SLOT_ORDER: FxSlot[] = [
   'saturation',
@@ -23,6 +28,19 @@ function slotFraction(slot: FxSlot, value: number): number {
     return value / SATURATION_MAX;
   }
   return value;
+}
+
+function transportFraction(
+  kind: 'strobe' | 'zoom' | 'hue' | 'duration',
+  value: number,
+): number {
+  if (kind === 'strobe')
+    return (value - STROBE_MIN_HZ) / (STROBE_MAX_HZ - STROBE_MIN_HZ);
+  if (kind === 'zoom') return (value - ZOOM_MIN) / (ZOOM_MAX - ZOOM_MIN);
+  if (kind === 'hue') return value % 1;
+  const idx = TRANSITION_DURATIONS.indexOf(value);
+  if (idx === -1) return 0.5;
+  return idx / (TRANSITION_DURATIONS.length - 1);
 }
 
 export function ShortcutMap() {
@@ -67,23 +85,84 @@ export function ShortcutMap() {
         ))}
       </ul>
       <span data-testid="desk-status">
-        bursts {burstCount} · fx {transitionDuration.toFixed(1)}s · hue{' '}
-        {Math.round(hueShift * 8)}/8 · zoom {zoomTarget.toFixed(2)}x ·{' '}
         {selectedFx} {selectedValue.toFixed(1)} · S kills all
       </span>
-      <div className="desk-pills" data-testid="desk-pills">
-        <span
-          className={`pill pill-strobe pill-${strobeMode} ${strobeOn ? 'on' : 'off'}`}
-          title={`Strobe ${strobeMode} ${strobeRateHz}Hz`}
-        >
-          STROBE {strobeMode} {strobeRateHz}Hz {strobeOn ? 'ON' : 'off'}
-        </span>
-        <span className={`pill ${vhsOn ? 'on pill-vhs' : 'off'}`}>VHS</span>
-        <span className={`pill ${rgbOn ? 'on pill-rgb' : 'off'}`}>RGB</span>
-        <span className={`pill ${beatFlashOn ? 'on pill-beat' : 'off'}`}>BEAT</span>
-        <span className={`pill ${fxBypassed ? 'on pill-bypass' : 'off'}`}>BYPASS</span>
-        <span className={`pill ${liteOn ? 'on pill-lite' : 'off'}`}>LITE</span>
-        <span className={`pill ${autoPilotOn ? 'on pill-auto' : 'off'}`}>AUTO</span>
+      <div className="desk-groups" data-testid="desk-groups">
+        <div className="desk-group">
+          <span className="desk-group-label">STROBE</span>
+          <span
+            className={`pill pill-strobe pill-${strobeMode} ${strobeOn ? 'on' : 'off'}`}
+            title={`Strobe ${strobeMode} ${strobeRateHz}Hz`}
+          >
+            {strobeMode} {strobeRateHz}Hz {strobeOn ? 'ON' : 'off'}
+          </span>
+        </div>
+        <div className="desk-group">
+          <span className="desk-group-label">TRANSPORT</span>
+          <div className="transport-bars" data-testid="transport-bars">
+            <div className="transport-row">
+              <span>Hz</span>
+              <div className="mix-track">
+                <div
+                  className="mix-fill"
+                  style={{
+                    width: `${Math.round(transportFraction('strobe', strobeRateHz) * 100)}%`,
+                  }}
+                />
+              </div>
+              <span>{strobeRateHz}</span>
+            </div>
+            <div className="transport-row">
+              <span>FX</span>
+              <div className="mix-track">
+                <div
+                  className="mix-fill"
+                  style={{
+                    width: `${Math.round(transportFraction('duration', transitionDuration) * 100)}%`,
+                  }}
+                />
+              </div>
+              <span>{transitionDuration.toFixed(1)}s</span>
+            </div>
+            <div className="transport-row">
+              <span>HUE</span>
+              <div className="mix-track">
+                <div
+                  className="mix-fill"
+                  style={{
+                    width: `${Math.round(transportFraction('hue', hueShift) * 100)}%`,
+                    background: `hsl(${Math.round(hueShift * 360)} 100% 50%)`,
+                  }}
+                />
+              </div>
+              <span>{Math.round(hueShift * 8)}/8</span>
+            </div>
+            <div className="transport-row">
+              <span>ZOOM</span>
+              <div className="mix-track">
+                <div
+                  className="mix-fill"
+                  style={{
+                    width: `${Math.round(transportFraction('zoom', zoomTarget) * 100)}%`,
+                  }}
+                />
+              </div>
+              <span>{zoomTarget.toFixed(2)}x</span>
+            </div>
+          </div>
+        </div>
+        <div className="desk-group">
+          <span className="desk-group-label">FLAGS</span>
+          <div className="desk-pills" data-testid="desk-pills">
+            <span className={`pill pill-burst on`}>BURSTS {burstCount}</span>
+            <span className={`pill ${vhsOn ? 'on pill-vhs' : 'off'}`}>VHS</span>
+            <span className={`pill ${rgbOn ? 'on pill-rgb' : 'off'}`}>RGB</span>
+            <span className={`pill ${beatFlashOn ? 'on pill-beat' : 'off'}`}>BEAT</span>
+            <span className={`pill ${fxBypassed ? 'on pill-bypass' : 'off'}`}>BYPASS</span>
+            <span className={`pill ${liteOn ? 'on pill-lite' : 'off'}`}>LITE</span>
+            <span className={`pill ${autoPilotOn ? 'on pill-auto' : 'off'}`}>AUTO</span>
+          </div>
+        </div>
       </div>
       <div className="mix-bars" data-testid="mix-bars">
         {SLOT_ORDER.map((slot) => (

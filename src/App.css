@@ -169,6 +169,60 @@
   color: #fff;
 }
 
+.pill-burst {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  opacity: 1;
+}
+
+.desk-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.desk-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desk-group-label {
+  min-width: 72px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+}
+
+.transport-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.transport-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.transport-row span:first-child {
+  min-width: 28px;
+  opacity: 0.6;
+}
+
+.transport-row span:last-child {
+  min-width: 36px;
+  text-align: right;
+  opacity: 0.9;
+}
+
 .scene-badge {
   position: absolute;
   left: 12px;
