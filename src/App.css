@@ -266,6 +266,57 @@
   opacity: 1;
 }
 
+.preset-builder {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  max-width: min(560px, calc(100vw - 24px));
+  color: #fff;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.preset-builder-row {
+  display: flex;
+  gap: 12px;
+}
+
+.preset-browser ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 180px;
+  overflow: auto;
+}
+
+.preset-browser li.selected button:first-child {
+  font-weight: 700;
+}
+
+.preset-preview-box {
+  width: 160px;
+  height: 90px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.preset-knobs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .spectrum-bars {
   display: flex;
   flex-direction: column;
