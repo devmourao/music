@@ -3,6 +3,13 @@ export interface ScenePalette {
   emissive: string;
 }
 
+export type BaseId = 'particles' | 'mesh' | 'tunnel';
+
+export interface BaseInstance {
+  base: BaseId;
+  params?: Record<string, unknown>;
+}
+
 export interface ScenePreset {
   id: number;
   name: string;
@@ -11,6 +18,7 @@ export interface ScenePreset {
   background: string;
   gain: number;
   speed: number;
+  instances?: BaseInstance[];
 }
 
 export const PRESETS: ScenePreset[] = [
@@ -49,6 +57,19 @@ export const PRESETS: ScenePreset[] = [
     background: '#050000',
     gain: 1.3,
     speed: 1.6,
+  },
+  {
+    id: 4,
+    name: 'Tunnel + Dust',
+    scene: 0,
+    palette: { primary: '#f0abfc', emissive: '#a21caf' },
+    background: '#080412',
+    gain: 1,
+    speed: 1,
+    instances: [
+      { base: 'tunnel', params: { cameraMode: 'centered', shape: 'mixed' } },
+      { base: 'particles', params: { count: 120 } },
+    ],
   },
 ];
 
