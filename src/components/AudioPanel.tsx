@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent } from 'react';
 import type { AudioEngineApi } from '../audio/useAudioEngine';
 import { useDirectorStore } from '../director/directorStore';
+import { getPreset, PLAYLIST } from '../scenes/presets';
 
 interface QueueItem {
   id: string;
@@ -12,6 +13,8 @@ export function AudioPanel({ engine }: { engine: AudioEngineApi }) {
   const meshTextureUrl = useDirectorStore((s) => s.meshTextureUrl);
   const meshTextureStatus = useDirectorStore((s) => s.meshTextureStatus);
   const [queue, setQueue] = useState<QueueItem[]>([]);
+  const [effectQueue, setEffectQueue] = useState<number[]>([...PLAYLIST]);
+  const activePresetId = useDirectorStore((s) => s.activePresetId);
   const onFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -21,6 +24,15 @@ export function AudioPanel({ engine }: { engine: AudioEngineApi }) {
   };
   const move = (idx: number, dir: -1 | 1) => {
     setQueue((q) => {
+      const next = [...q];
+      const target = idx + dir;
+      if (target < 0 || target >= next.length) return q;
+      [next[idx], next[target]] = [next[target], next[idx]];
+      return next;
+    });
+  };
+  const moveEffect = (idx: number, dir: -1 | 1) => {
+    setEffectQueue((q) => {
       const next = [...q];
       const target = idx + dir;
       if (target < 0 || target >= next.length) return q;
@@ -45,7 +57,7 @@ export function AudioPanel({ engine }: { engine: AudioEngineApi }) {
       </label>
       {queue.length > 0 && (
         <div className="playlist" data-testid="music-playlist">
-          <span className="playlist-label">Queue (session only)</span>
+          <span className="playlist-label">Music queue (session only)</span>
           <ul>
             {queue.map((item, idx) => (
               <li key={item.id} className="playlist-row">
@@ -77,6 +89,57 @@ export function AudioPanel({ engine }: { engine: AudioEngineApi }) {
           </button>
         </div>
       )}
+      <div className="playlist" data-testid="effects-playlist">
+        <span className="playlist-label">Effects queue</span>
+        <ul>
+          {effectQueue.map((pid, idx) => {
+            const preset = getPreset(pid);
+            return (
+              <li key={`${pid}-${idx}`} className="playlist-row">
+                <span
+                  className="strobe-swatch"
+                  style={{ background: preset.palette.primary }}
+                  aria-hidden
+                />
+                <button
+                  type="button"
+                  onClick={() => useDirectorStore.getState().requestDissolve(pid)}
+                >
+                  Load
+                </button>
+                <span className="playlist-name">{preset.name}</span>
+                <button type="button" onClick={() => moveEffect(idx, -1)} disabled={idx === 0}>
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveEffect(idx, 1)}
+                  disabled={idx === effectQueue.length - 1}
+                >
+                  ▼
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEffectQueue((q) => q.filter((_, i) => i !== idx))}
+                >
+                  ✕
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="audio-panel-row">
+          <button
+            type="button"
+            onClick={() => setEffectQueue((q) => [...q, activePresetId])}
+          >
+            Add current ({getPreset(activePresetId).name})
+          </button>
+          <button type="button" onClick={() => setEffectQueue([...PLAYLIST])}>
+            Reset
+          </button>
+        </div>
+      </div>
       <div className="audio-panel-row">
         <button type="button" onClick={() => void engine.toggle()}>
           {engine.isPlaying ? 'Pause' : 'Play'}
