@@ -3,6 +3,7 @@ import { getPreset, PRESETS, type ScenePreset } from '../scenes/presets';
 import { useDirectorStore } from '../director/directorStore';
 
 export function PresetBuilder() {
+  const [collapsed, setCollapsed] = useState(true);
   const [presets, setPresets] = useState<ScenePreset[]>([...PRESETS]);
   const [selectedId, setSelectedId] = useState<number>(presets[0]?.id ?? 0);
   const [palette, setPalette] = useState(presets[0]?.palette.primary ?? '#7dd3fc');
@@ -60,8 +61,11 @@ export function PresetBuilder() {
 
   return (
     <div className="preset-builder" data-testid="preset-builder">
-      <strong>Preset Builder</strong>
-      <div className="preset-builder-row">
+      <button type="button" className="preset-builder-header" onClick={() => setCollapsed((v) => !v)}>
+        <strong>Preset Builder — variation of existing scene</strong>
+        <span>{collapsed ? '▸ Expand' : '▾ Collapse'}</span>
+      </button>
+      {!collapsed && <div className="preset-builder-row">
         <div className="preset-browser">
           <span className="playlist-label">Library</span>
           <ul>
@@ -114,10 +118,10 @@ export function PresetBuilder() {
             Speed {speed.toFixed(1)} <input type="range" min={0.5} max={2} step={0.1} value={speed} onChange={(e) => setSpeed(Number(e.target.value))} />
           </label>
           <button type="button" onClick={save}>
-            Save as new preset
+            Save as variation
           </button>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
