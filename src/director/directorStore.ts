@@ -319,7 +319,7 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: 'Arrows', action: 'Nudge camera' },
   { key: '+ / -', action: 'Zoom in / out (damped)' },
   { key: 'E / ]', action: 'Select effect slot' },
-  { key: 'R / F (´ [)', action: 'Effect mix up / down' },
+  { key: 'R / F', action: 'Effect mix up / down (selected slot, ABNT2: [ / \u00B4)' },
   { key: ', / .', action: 'Strobe speed down / up' },
   { key: 'V', action: 'Toggle VHS glitch' },
   { key: 'C', action: 'Toggle RGB split' },
