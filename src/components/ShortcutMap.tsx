@@ -93,6 +93,7 @@ export function ShortcutMap() {
       <div className="desk-groups" data-testid="desk-groups">
         <div className="desk-group">
           <span className="desk-group-label">STROBE</span>
+          <span className={`strobe-swatch ${strobeMode}`} aria-hidden />
           <span
             className={`pill pill-strobe pill-${strobeMode} ${strobeOn ? 'on' : 'off'}`}
             title={`Strobe ${strobeMode} ${strobeRateHz}Hz`}
@@ -110,6 +111,12 @@ export function ShortcutMap() {
                   className="mix-fill"
                   style={{
                     width: `${Math.round(transportFraction('strobe', strobeRateHz) * 100)}%`,
+                    background:
+                      strobeMode === 'white'
+                        ? '#fff'
+                        : strobeMode === 'black'
+                          ? '#6b7280'
+                          : 'linear-gradient(90deg, #ff0040, #ffea00, #00ff88, #00d4ff, #cc00ff)',
                   }}
                 />
               </div>

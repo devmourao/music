@@ -127,16 +127,39 @@
 .pill-strobe.pill-white.on {
   background: #fff;
   color: #000;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.85);
 }
 
 .pill-strobe.pill-black.on {
   background: #111;
   color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
 }
 
 .pill-strobe.pill-color.on {
   background: linear-gradient(90deg, #ff0040, #ffea00, #00ff88, #00d4ff, #cc00ff);
   color: #000;
+  box-shadow: 0 0 10px rgba(255, 100, 180, 0.7);
+}
+
+.strobe-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.strobe-swatch.white {
+  background: #fff;
+}
+
+.strobe-swatch.black {
+  background: #111;
+}
+
+.strobe-swatch.color {
+  background: linear-gradient(90deg, #ff0040, #ffea00, #00ff88, #00d4ff, #cc00ff);
 }
 
 .pill-vhs.on {
