@@ -13,6 +13,7 @@
 * E07 — Polish and identity v0.2.1 (color, strobe modes, site metadata, rename)
 * E08 — Stage Control v0.3.0 (panel modes, fullscreen output, auto-pilot tour, desk status HUD)
 * E09 — Playlists v0.4.0 (local music queue and effects preset queue)
+* E10 — Builder & Media v0.5.0 (preset builder, video frame, elemental library, export/import)
 
 ## Items
 
@@ -64,6 +65,10 @@
 | VJLAB-44 | Strobe color reinforcement — swatch, glow and Hz bar tint for strobe mode | Enhancement | Small | E08 | M7 | New |
 | VJLAB-45 | Local music playlist — queue, reorder and load local tracks (session) | Feature | Medium | E09 | M9 | New |
 | VJLAB-46 | Effects preset playlist — queue, reorder and save effect presets as playlist | Feature | Medium | E09 | M9 | New |
+| VJLAB-50 | Preset builder UI — browser, preview and knobs to assemble and save presets | Feature | Medium | E10 | M10 | New |
+| VJLAB-51 | Elemental presets — fire/water/earth/air variants as data-driven presets (bases + table) | Feature | Medium | E10 | M10 | New |
+| VJLAB-52 | Video frame — local video as VideoTexture in scene frame with audio analysis | Feature | Medium | E10 | M10 | New |
+| VJLAB-53 | Preset export/import — JSON file without DB, versioned schema | Feature | Medium | E10 | M10 | New |
 
 ## Dependencies
 
@@ -89,3 +94,4 @@
 | 0.3.1 | 2026-09-16 | Add VJLAB-44 strobe color reinforcement (E08 M7) |
 | 0.3.2 | 2026-09-16 | Add VJLAB-43 keyboard ergonomics review (E08 M8) |
 | 0.4.0 | 2026-09-16 | Add E09 Playlists with VJLAB-45/46 (M9) |
+| 0.5.0 | 2026-09-16 | Add E10 Builder & Media with VJLAB-50/51/52/53 (M10) |
