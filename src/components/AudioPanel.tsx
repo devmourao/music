@@ -1,14 +1,32 @@
-import type { ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import type { AudioEngineApi } from '../audio/useAudioEngine';
 import { useDirectorStore } from '../director/directorStore';
+
+interface QueueItem {
+  id: string;
+  file: File;
+}
 
 export function AudioPanel({ engine }: { engine: AudioEngineApi }) {
   const overlayText = useDirectorStore((s) => s.overlayText);
   const meshTextureUrl = useDirectorStore((s) => s.meshTextureUrl);
   const meshTextureStatus = useDirectorStore((s) => s.meshTextureStatus);
+  const [queue, setQueue] = useState<QueueItem[]>([]);
   const onFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) engine.loadFile(file);
+    if (!file) return;
+    engine.loadFile(file);
+    setQueue((q) => [...q, { id: `${Date.now()}-${file.name}`, file }]);
+    event.target.value = '';
+  };
+  const move = (idx: number, dir: -1 | 1) => {
+    setQueue((q) => {
+      const next = [...q];
+      const target = idx + dir;
+      if (target < 0 || target >= next.length) return q;
+      [next[idx], next[target]] = [next[target], next[idx]];
+      return next;
+    });
   };
   const onImage = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -25,6 +43,40 @@ export function AudioPanel({ engine }: { engine: AudioEngineApi }) {
         <span>Track (.mp3)</span>
         <input type="file" accept=".mp3,audio/*" onChange={onFile} />
       </label>
+      {queue.length > 0 && (
+        <div className="playlist" data-testid="music-playlist">
+          <span className="playlist-label">Queue (session only)</span>
+          <ul>
+            {queue.map((item, idx) => (
+              <li key={item.id} className="playlist-row">
+                <button type="button" onClick={() => engine.loadFile(item.file)}>
+                  Load
+                </button>
+                <span className="playlist-name">{item.file.name}</span>
+                <button type="button" onClick={() => move(idx, -1)} disabled={idx === 0}>
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(idx, 1)}
+                  disabled={idx === queue.length - 1}
+                >
+                  ▼
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setQueue((q) => q.filter((x) => x.id !== item.id))}
+                >
+                  ✕
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button type="button" onClick={() => setQueue([])}>
+            Clear queue
+          </button>
+        </div>
+      )}
       <div className="audio-panel-row">
         <button type="button" onClick={() => void engine.toggle()}>
           {engine.isPlaying ? 'Pause' : 'Play'}
