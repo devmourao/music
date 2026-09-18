@@ -1,8 +1,8 @@
 export const PARTICLE_COUNT = 240;
 
-export const RING_COUNT = 12;
+export const RING_COUNT = 24;
 
-export const RING_SPACING = 2.2;
+export const RING_SPACING = 1.1;
 
 export const SCENE_NAMES = ['Particles', 'Mesh', 'Tunnel'] as const;
 

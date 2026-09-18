@@ -56,7 +56,11 @@ export function TunnelFieldScene({
     <group ref={groupRef}>
       {offsets.map((z, i) => (
         <mesh key={i} position={[0, 0, z]} material={material}>
-          <torusGeometry args={[2.4, 0.045, 8, 64]} />
+          {i % 2 === 0 ? (
+            <torusGeometry args={[2.6, 0.05, 3, 64]} />
+          ) : (
+            <torusGeometry args={[2.6, 0.05, 4, 64]} />
+          )}
         </mesh>
       ))}
     </group>
