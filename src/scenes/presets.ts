@@ -6,7 +6,7 @@ export interface ScenePalette {
 export interface ScenePreset {
   id: number;
   name: string;
-  scene: 0 | 1 | 2;
+  scene: 0 | 1 | 2 | 3;
   palette: ScenePalette;
   background: string;
   gain: number;
@@ -40,6 +40,15 @@ export const PRESETS: ScenePreset[] = [
     background: '#01090d',
     gain: 1,
     speed: 1,
+  },
+  {
+    id: 3,
+    name: 'Octagon Pulse',
+    scene: 3,
+    palette: { primary: '#ffba6a', emissive: '#ff3b00' },
+    background: '#0a0603',
+    gain: 1.5,
+    speed: 1.2,
   },
 ];
 
