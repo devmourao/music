@@ -84,9 +84,12 @@ export function ShortcutMap() {
           </li>
         ))}
       </ul>
-      <span data-testid="desk-status">
-        {selectedFx} {selectedValue.toFixed(1)} · S kills all
-      </span>
+      <div className="desk-status-line" data-testid="desk-status">
+        <span className="pill on pill-selected">
+          {selectedFx} {selectedValue.toFixed(1)}
+        </span>
+        <span className="pill pill-hint">S kills all</span>
+      </div>
       <div className="desk-groups" data-testid="desk-groups">
         <div className="desk-group">
           <span className="desk-group-label">STROBE</span>
