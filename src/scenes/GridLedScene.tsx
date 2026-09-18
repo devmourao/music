@@ -70,19 +70,27 @@ export function GridLedScene({
     const time = clock.elapsedTime * speed;
 
     if (pointsRef.current) {
+      const geom = pointsRef.current.geometry as THREE.BufferGeometry;
+      const pos = geom.attributes.position as THREE.BufferAttribute;
+      // Chase moves LEDs along ring with mids, bass makes them breathe
+      for (let i = 0; i < ledCount; i++) {
+        const baseAngle = (i / ledCount) * Math.PI * 2;
+        const chaseAngle = baseAngle + mids * 1.2 + time * 0.4;
+        const radius = 2.2 + bass * 0.35 * gain + liveRefs.boost * 0.4;
+        pos.setXYZ(i, Math.cos(chaseAngle) * radius, 1.2 + Math.sin(chaseAngle * 2) * 0.15, Math.sin(chaseAngle) * radius);
+      }
+      pos.needsUpdate = true;
       const mat = pointsRef.current.material as THREE.PointsMaterial;
-      // Bass pulses brightness, mids drives chase
-      const chase = (Math.sin(time * 2) + 1) / 2;
-      const intensity = 0.6 + bass * 0.7 * gain + liveRefs.boost * 0.5;
+      const intensity = 0.7 + bass * 0.8 * gain + liveRefs.boost * 0.6;
       mat.opacity = Math.min(1, intensity);
-      mat.size = 0.12 + chase * 0.06 + bass * 0.08;
-      // Color shift slightly with mids
-      const hue = (0.08 + mids * 0.05) % 1;
+      mat.size = 0.16 + bass * 0.18 + mids * 0.08;
+      const hue = (0.08 + mids * 0.12 + time * 0.02) % 1;
       mat.color.setHSL(hue, 1, 0.55);
     }
 
     if (planeRef.current) {
-      planeRef.current.rotation.y = Math.sin(time * 0.1) * 0.05;
+      planeRef.current.rotation.y = Math.sin(time * 0.15) * 0.12;
+      planeRef.current.position.y = Math.sin(time * 0.3) * 0.08 * gain;
     }
   });
 
