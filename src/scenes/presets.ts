@@ -41,6 +41,15 @@ export const PRESETS: ScenePreset[] = [
     gain: 1,
     speed: 1,
   },
+  {
+    id: 3,
+    name: 'Neon Tri Tunnel',
+    scene: 2,
+    palette: { primary: '#ff8a8a', emissive: '#ffffff' },
+    background: '#050000',
+    gain: 1.3,
+    speed: 1.6,
+  },
 ];
 
 export const PRESET_COUNT = PRESETS.length;
