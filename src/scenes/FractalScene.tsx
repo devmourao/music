@@ -46,7 +46,7 @@ const fragmentShader = `
     float rot = time * 0.12 + mids * 0.3;
     kp = vec2(kp.x * cos(rot) - kp.y * sin(rot), kp.x * sin(rot) + kp.y * cos(rot));
 
-    // HD mandala 3 layers with radial color flow and travelling dots
+    // HD mandala 3 layers with radial color flow and travelling dots — stronger bass
     float outer = 0.0;
     float inner = 0.0;
     float dots = 0.0;
@@ -54,7 +54,7 @@ const fragmentShader = `
       float a = float(i) / 10.0 * 6.28318;
       vec2 dir = vec2(cos(a), sin(a));
       float d1 = abs(dot(kp, dir) - 0.42 / zoom);
-      outer += smoothstep(0.008, 0.0, d1) * (1.0 + bass * 0.5);
+      outer += smoothstep(0.008, 0.0, d1) * (1.0 + bass * 0.9);
       vec2 kp2 = kp * 1.9;
       float d2 = abs(dot(kp2, dir) - 0.42 / zoom);
       inner += smoothstep(0.008, 0.0, d2) * 0.65;
@@ -68,10 +68,10 @@ const fragmentShader = `
     // Radial color flow center->border
     float radialT = smoothstep(0.0, 0.7, radius * 1.2);
     vec3 flowCol = paletteFlow(radialT + time * 0.02 * (0.5 + treble * 0.5));
-    float brightness = 0.95 + boost * 0.6;
+    float brightness = 0.95 + boost * 1.2;
     vec3 outerCol = flowCol * outer * brightness;
     vec3 innerCol = flowCol * inner * brightness * 0.9;
-    vec3 dotCol = color2 * dots * (0.9 + boost * 0.5);
+    vec3 dotCol = color2 * dots * (0.9 + boost * 1.0);
     float filigree = smoothstep(0.006, 0.0, abs(fract(angle * 3.14159) - 0.5) * radius * 0.45);
     vec3 col = outerCol + innerCol + dotCol + filigree * color1 * 0.12;
     col += pow(outer + inner, 1.8) * color1 * 0.12;
@@ -126,11 +126,11 @@ export function FractalScene({
     if (!materialRef.current) return;
     const u = materialRef.current.uniforms;
     const smoothBass = THREE.MathUtils.lerp(u.bass.value, bass, 0.08);
-    const morphSpeed = 0.03 + smoothBass * 0.14 + mids * 0.08 + liveRefs.boost * 0.5;
+    const morphSpeed = 0.05 + smoothBass * 0.28 + mids * 0.15 + liveRefs.boost * 1.5;
     u.morphPhase.value += delta * morphSpeed * speed;
     u.time.value = clock.elapsedTime * speed * 0.35;
-    const targetZoom = 1 + Math.sin(clock.elapsedTime * 0.07) * 0.04 + liveRefs.boost * 0.4;
-    u.zoom.value = THREE.MathUtils.lerp(u.zoom.value, targetZoom, 0.04);
+    const targetZoom = 1 + Math.sin(clock.elapsedTime * 0.07) * 0.04 + liveRefs.boost * 0.9;
+    u.zoom.value = THREE.MathUtils.lerp(u.zoom.value, targetZoom, 0.05);
     u.bass.value = smoothBass;
     u.mids.value = THREE.MathUtils.lerp(u.mids.value, mids, 0.08);
     u.treble.value = THREE.MathUtils.lerp(u.treble.value, treble, 0.08);
