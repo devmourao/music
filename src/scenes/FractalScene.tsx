@@ -16,6 +16,7 @@ const vertexShader = `
 const fragmentShader = `
   varying vec2 vUv;
   uniform float time;
+  uniform float morphPhase;
   uniform float zoom;
   uniform float bass;
   uniform float mids;
@@ -23,9 +24,7 @@ const fragmentShader = `
   uniform vec3 color1;
   uniform vec3 color2;
 
-  // Palette with radial flow center->border
   vec3 paletteFlow(float t) {
-    // t 0 center, 1 border — magenta->cyan flow
     return mix(color1, color2, smoothstep(0.0, 1.0, t + sin(time * 0.07) * 0.1));
   }
 
@@ -35,9 +34,8 @@ const fragmentShader = `
     float z = 1.0 / zoom;
     vec2 p = uv * z * 1.35;
 
-    // Evolution audio-rate: slow when calm, frenetic when bass/mids high
-    float morphSpeed = 0.03 + bass * 0.14 + mids * 0.08;
-    float morph = (sin(time * morphSpeed) + 1.0) * 0.5; // 0..1
+    // Monotonic morph phase — only metamorphosis, no zoom fight
+    float morph = (sin(morphPhase) + 1.0) * 0.5; // 0..1
     float segs = mix(10.0, 5.0, smoothstep(0.3, 0.7, morph));
     float angle = atan(p.y, p.x);
     float radius = length(p);
@@ -69,13 +67,22 @@ const fragmentShader = `
     // Radial color flow center->border
     float radialT = smoothstep(0.0, 0.7, radius * 1.2);
     vec3 flowCol = paletteFlow(radialT + time * 0.02 * (0.5 + treble * 0.5));
-    float brightness = 0.9 + bass * 0.4;
+    float brightness = 0.95;
     vec3 outerCol = flowCol * outer * brightness;
-    vec3 innerCol = flowCol * inner * brightness * 0.85;
-    vec3 dotCol = color2 * dots * (0.9 + bass * 0.3);
+    vec3 innerCol = flowCol * inner * brightness * 0.9;
+    vec3 dotCol = color2 * dots * 0.9;
     float filigree = smoothstep(0.006, 0.0, abs(fract(angle * 3.14159) - 0.5) * radius * 0.45);
     vec3 col = outerCol + innerCol + dotCol + filigree * color1 * 0.12;
     col += pow(outer + inner, 1.8) * color1 * 0.12;
+
+    // Central ball with propeller rays — color inside->outside
+    float ball = smoothstep(0.14, 0.0, length(p));
+    float rayAngle = atan(p.y, p.x) + time * (0.6 + bass * 0.4);
+    float ray = step(0.97, cos(rayAngle * 10.0)) * smoothstep(0.6, 0.1, length(p)) * (0.7 + bass * 0.3);
+    // Inside->outside gradient for rays: center magenta -> border cyan
+    vec3 rayCol = mix(color1, color2, smoothstep(0.0, 0.6, length(p) * 1.5));
+    col += ball * color1 * 0.35;
+    col += ray * rayCol * 1.2;
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -98,6 +105,7 @@ export function FractalScene({
   const uniforms = useMemo(
     () => ({
       time: { value: 0 },
+      morphPhase: { value: 0 },
       zoom: { value: 1 },
       bass: { value: 0 },
       mids: { value: 0 },
@@ -115,14 +123,16 @@ export function FractalScene({
     liveRefs.boost = decayBurst(liveRefs.boost, delta);
     if (!materialRef.current) return;
     const u = materialRef.current.uniforms;
-    // Smooth time for evolution, bass only accelerates slightly
     const smoothBass = THREE.MathUtils.lerp(u.bass.value, bass, 0.08);
-    u.time.value = clock.elapsedTime * speed * 0.35 + smoothBass * 0.5;
-    const targetZoom = 1 + smoothBass * 0.45 * gain + liveRefs.boost * 0.3 + Math.sin(clock.elapsedTime * 0.07) * 0.06;
+    const morphSpeed = 0.03 + smoothBass * 0.14 + mids * 0.08;
+    u.morphPhase.value += delta * morphSpeed * speed;
+    u.time.value = clock.elapsedTime * speed * 0.35;
+    const targetZoom = 1 + Math.sin(clock.elapsedTime * 0.07) * 0.04;
     u.zoom.value = THREE.MathUtils.lerp(u.zoom.value, targetZoom, 0.03);
     u.bass.value = smoothBass;
     u.mids.value = THREE.MathUtils.lerp(u.mids.value, mids, 0.08);
     u.treble.value = THREE.MathUtils.lerp(u.treble.value, treble, 0.08);
+    void gain;
     void liteOn;
   });
 
