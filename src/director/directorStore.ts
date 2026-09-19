@@ -51,6 +51,7 @@ interface DirectorState {
   autoPilotOn: boolean;
   fractalShape: number;
   fractalZ: number;
+  fractalInner: number;
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
@@ -88,6 +89,7 @@ interface DirectorState {
   toggleAutoPilot: () => void;
   cycleFractalShape: (dir: 1 | -1) => void;
   rotateFractalZ: (dir: 1 | -1) => void;
+  cycleFractalInner: (dir: 1 | -1) => void;
 }
 
 /**
@@ -126,6 +128,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   autoPilotOn: true,
   fractalShape: 0,
   fractalZ: 0,
+  fractalInner: 1.9,
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -218,7 +221,11 @@ export const useDirectorStore = create<DirectorState>((set) => ({
     })),
   rotateFractalZ: (dir) =>
     set((s) => ({
-      fractalZ: s.fractalZ + dir * 0.35,
+      fractalZ: s.fractalZ + dir * 0.9,
+    })),
+  cycleFractalInner: (dir) =>
+    set((s) => ({
+      fractalInner: Math.max(1.3, Math.min(2.4, s.fractalInner + dir * 0.15)),
     })),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.

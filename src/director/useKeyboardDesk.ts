@@ -154,7 +154,7 @@ export function useKeyboardDesk() {
         case 'ArrowLeft':
           if (store.activePresetId === 5) {
             event.preventDefault();
-            store.cycleFractalShape(-1);
+            store.cycleFractalInner(-1);
             break;
           }
           event.preventDefault();
@@ -163,7 +163,7 @@ export function useKeyboardDesk() {
         case 'ArrowRight':
           if (store.activePresetId === 5) {
             event.preventDefault();
-            store.cycleFractalShape(1);
+            store.cycleFractalInner(1);
             break;
           }
           event.preventDefault();
