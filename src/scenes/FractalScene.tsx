@@ -35,8 +35,9 @@ const fragmentShader = `
     float z = 1.0 / zoom;
     vec2 p = uv * z * 1.35;
 
-    // Evolution: morph segments 10 -> 5 over 40s
-    float morph = (sin(time * 0.05) + 1.0) * 0.5; // 0..1
+    // Evolution audio-rate: slow when calm, frenetic when bass/mids high
+    float morphSpeed = 0.03 + bass * 0.14 + mids * 0.08;
+    float morph = (sin(time * morphSpeed) + 1.0) * 0.5; // 0..1
     float segs = mix(10.0, 5.0, smoothstep(0.3, 0.7, morph));
     float angle = atan(p.y, p.x);
     float radius = length(p);
