@@ -221,7 +221,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
     })),
   rotateFractalZ: (dir) =>
     set((s) => ({
-      fractalZ: s.fractalZ + dir * 0.9,
+      fractalZ: s.fractalZ + dir * 1.4,
     })),
   cycleFractalInner: (dir) =>
     set((s) => ({
