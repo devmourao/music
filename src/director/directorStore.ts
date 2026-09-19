@@ -119,7 +119,7 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   meshTextureUrl: null,
   meshTextureStatus: 'idle',
   panelMode: 'docked',
-  autoPilotOn: false,
+  autoPilotOn: true,
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
