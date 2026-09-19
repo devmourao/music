@@ -21,6 +21,7 @@ const fragmentShader = `
   uniform float bass;
   uniform float mids;
   uniform float treble;
+  uniform float boost;
   uniform vec3 color1;
   uniform vec3 color2;
 
@@ -67,10 +68,10 @@ const fragmentShader = `
     // Radial color flow center->border
     float radialT = smoothstep(0.0, 0.7, radius * 1.2);
     vec3 flowCol = paletteFlow(radialT + time * 0.02 * (0.5 + treble * 0.5));
-    float brightness = 0.95;
+    float brightness = 0.95 + boost * 0.6;
     vec3 outerCol = flowCol * outer * brightness;
     vec3 innerCol = flowCol * inner * brightness * 0.9;
-    vec3 dotCol = color2 * dots * 0.9;
+    vec3 dotCol = color2 * dots * (0.9 + boost * 0.5);
     float filigree = smoothstep(0.006, 0.0, abs(fract(angle * 3.14159) - 0.5) * radius * 0.45);
     vec3 col = outerCol + innerCol + dotCol + filigree * color1 * 0.12;
     col += pow(outer + inner, 1.8) * color1 * 0.12;
@@ -110,6 +111,7 @@ export function FractalScene({
       bass: { value: 0 },
       mids: { value: 0 },
       treble: { value: 0 },
+      boost: { value: 0 },
       color1: { value: new THREE.Color(color) },
       color2: { value: new THREE.Color(emissive) },
     }),
@@ -124,14 +126,15 @@ export function FractalScene({
     if (!materialRef.current) return;
     const u = materialRef.current.uniforms;
     const smoothBass = THREE.MathUtils.lerp(u.bass.value, bass, 0.08);
-    const morphSpeed = 0.03 + smoothBass * 0.14 + mids * 0.08;
+    const morphSpeed = 0.03 + smoothBass * 0.14 + mids * 0.08 + liveRefs.boost * 0.5;
     u.morphPhase.value += delta * morphSpeed * speed;
     u.time.value = clock.elapsedTime * speed * 0.35;
-    const targetZoom = 1 + Math.sin(clock.elapsedTime * 0.07) * 0.04;
-    u.zoom.value = THREE.MathUtils.lerp(u.zoom.value, targetZoom, 0.03);
+    const targetZoom = 1 + Math.sin(clock.elapsedTime * 0.07) * 0.04 + liveRefs.boost * 0.4;
+    u.zoom.value = THREE.MathUtils.lerp(u.zoom.value, targetZoom, 0.04);
     u.bass.value = smoothBass;
     u.mids.value = THREE.MathUtils.lerp(u.mids.value, mids, 0.08);
     u.treble.value = THREE.MathUtils.lerp(u.treble.value, treble, 0.08);
+    u.boost.value = liveRefs.boost;
     void gain;
     void liteOn;
   });
