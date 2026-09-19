@@ -1,8 +1,28 @@
-import { useDirectorStore } from '../director/directorStore';
+import { useFrame } from '@react-three/fiber';
+import { useRef } from 'react';
+import * as THREE from 'three';
+import { liveRefs, useDirectorStore } from '../director/directorStore';
 import { DeformableMeshScene } from './DeformableMeshScene';
 import { ParticleFieldScene } from './ParticleFieldScene';
 import { TunnelFieldScene } from './TunnelFieldScene';
 import { getPreset } from './presets';
+
+function ParallaxGroup({
+  sensitivity,
+  children,
+}: {
+  sensitivity: number;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(() => {
+    const g = ref.current;
+    if (!g) return;
+    g.rotation.y = liveRefs.azimuth * sensitivity;
+    g.rotation.x = liveRefs.elevation * sensitivity;
+  });
+  return <group ref={ref}>{children}</group>;
+}
 
 function renderBase(base: string, preset: ReturnType<typeof getPreset>) {
   if (base === 'mesh')
@@ -39,9 +59,14 @@ export function SceneHost() {
   if (preset.instances && preset.instances.length > 0) {
     return (
       <group key={preset.id}>
-        {preset.instances.map((inst, idx) => (
-          <group key={`${preset.id}-${inst.base}-${idx}`}>{renderBase(inst.base, preset)}</group>
-        ))}
+        {preset.instances.map((inst, idx) => {
+          const sens = (inst.params?.cameraSensitivity as number | undefined) ?? 1;
+          return (
+            <ParallaxGroup key={`${preset.id}-${inst.base}-${idx}`} sensitivity={sens}>
+              {renderBase(inst.base, preset)}
+            </ParallaxGroup>
+          );
+        })}
       </group>
     );
   }
