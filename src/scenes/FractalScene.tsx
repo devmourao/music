@@ -24,6 +24,7 @@ const fragmentShader = `
   uniform float boost;
   uniform float segsOverride;
   uniform float rotOffset;
+  uniform float innerScale;
   uniform vec3 color1;
   uniform vec3 color2;
 
@@ -48,7 +49,7 @@ const fragmentShader = `
     angle = mod(angle, 6.28318 / segs);
     angle = abs(angle - 3.14159 / segs);
     vec2 kp = vec2(cos(angle), sin(angle)) * radius;
-    float rot = time * 0.12 + mids * 0.3 + rotOffset;
+    float rot = rotOffset;
     kp = vec2(kp.x * cos(rot) - kp.y * sin(rot), kp.x * sin(rot) + kp.y * cos(rot));
 
     // HD mandala 3 layers with radial color flow and travelling dots — stronger bass
@@ -60,10 +61,9 @@ const fragmentShader = `
       vec2 dir = vec2(cos(a), sin(a));
       float d1 = abs(dot(kp, dir) - 0.42 / zoom);
       outer += smoothstep(0.008, 0.0, d1) * (1.0 + bass * 0.9);
-      vec2 kp2 = kp * 1.9;
+      vec2 kp2 = kp * innerScale;
       float d2 = abs(dot(kp2, dir) - 0.42 / zoom);
       inner += smoothstep(0.008, 0.0, d2) * 0.65;
-      // Dots travel along lines
       float travel = sin(time * 0.7 + float(i) * 0.6) * 0.08;
       vec2 tip = dir * (0.42 / zoom + travel);
       float dDot = length(kp - tip);
@@ -119,6 +119,7 @@ export function FractalScene({
       boost: { value: 0 },
       segsOverride: { value: 0 },
       rotOffset: { value: 0 },
+      innerScale: { value: 1.9 },
       color1: { value: new THREE.Color(color) },
       color2: { value: new THREE.Color(emissive) },
     }),
@@ -147,9 +148,11 @@ export function FractalScene({
       const shapes = [10, 8, 6, 5, 12];
       u.segsOverride.value = shapes[state.fractalShape % shapes.length];
       u.rotOffset.value = state.fractalZ;
+      u.innerScale.value = state.fractalInner;
     } else {
       u.segsOverride.value = 0;
       u.rotOffset.value = 0;
+      u.innerScale.value = 1.9;
     }
     void gain;
     void liteOn;
