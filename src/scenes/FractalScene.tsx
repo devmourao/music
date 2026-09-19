@@ -45,28 +45,38 @@ const fragmentShader = `
     float rot = time * 0.15 + mids * 0.5;
     kp = vec2(kp.x * cos(rot) - kp.y * sin(rot), kp.x * sin(rot) + kp.y * cos(rot));
 
-    // Star SDF + neon lines — sharp, strong colors, black background
-    float star = 0.0;
+    // HD mandala: 3 layers sharp + dots — black background
+    float outer = 0.0;
+    float inner = 0.0;
+    float dots = 0.0;
     for(int i=0; i<10; i++) {
       float a = float(i) / 10.0 * 6.28318;
       vec2 dir = vec2(cos(a), sin(a));
-      float d = abs(dot(kp, dir) - 0.42 / zoom);
-      star += smoothstep(0.025, 0.0, d) * (1.0 + bass * 0.8);
+      // Outer star
+      float d1 = abs(dot(kp, dir) - 0.42 / zoom);
+      outer += smoothstep(0.008, 0.0, d1) * (1.0 + bass * 0.7);
+      // Inner star (half radius)
+      vec2 kp2 = kp * 1.9;
+      float d2 = abs(dot(kp2, dir) - 0.42 / zoom);
+      inner += smoothstep(0.008, 0.0, d2) * 0.7;
+      // Dots at vertices
+      vec2 tip = dir * (0.42 / zoom);
+      float dDot = length(kp - tip);
+      dots += smoothstep(0.025, 0.0, dDot) * 0.9;
+      vec2 tip2 = dir * (0.22 / zoom);
+      float dDot2 = length(kp2 - tip2);
+      dots += smoothstep(0.018, 0.0, dDot2) * 0.6;
     }
-    float center = smoothstep(0.18, 0.0, abs(radius - 0.18)) * step(radius, 0.35);
-    star += center * 0.9;
-    float beams = smoothstep(0.015, 0.0, abs(kp.y) - 0.015) * step(0.32, radius);
-    star += beams * (0.5 + bass * 0.9);
 
-    // Black background, neon star only — sharp
-    float mask = smoothstep(0.015, 0.0, 0.015 - star * 0.015);
-    // Use palette with strong contrast: color1 magenta, color2 cyan
-    vec3 neon = mix(color1, color2, smoothstep(0.0, 0.8, star));
-    // Boost saturation and brightness, no pink wash
-    float brightness = 0.9 + bass * 0.7 + mids * 0.3;
-    vec3 col = neon * brightness * smoothstep(0.0, 0.15, star);
-    // Add bloom-like glow for sharp lines
-    col += neon * pow(star, 3.0) * 0.6;
+    float brightness = 0.95 + bass * 0.6 + mids * 0.25;
+    vec3 outerCol = mix(color1, color2, 0.0) * outer * brightness;
+    vec3 innerCol = mix(color1, color2, 0.55) * inner * brightness * 0.9;
+    vec3 dotCol = color2 * dots * (1.0 + treble * 0.5);
+    // Filigree-like fine lines via secondary kaleidoscope
+    float filigree = smoothstep(0.006, 0.0, abs(fract(angle * 3.14159) - 0.5) * radius * 0.5);
+    vec3 col = outerCol + innerCol + dotCol + filigree * color1 * 0.15;
+    // Sharp glow
+    col += pow(outer + inner, 2.0) * color1 * 0.15;
 
     gl_FragColor = vec4(col, 1.0);
   }
