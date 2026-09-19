@@ -9,7 +9,7 @@ Separate the reusable **Base** (mold without values) from the ready-to-play **Sc
 | Term | Industry equivalent | Meaning | Example |
 |------|---------------------|---------|---------|
 | Base | Resolume Source / Generator, VDMX Layer Source | Reusable template that declares its schema (which knobs exist and their ranges) | `TunnelBase`, `ParticleFieldBase`, `GridLedBase` |
-| Base Instance | Resolume Clip | One use of a base with filled parameters | `{ base: 'tunnel', params: {shape:'mixed', ringCount:24, paletteMode:'multi', cameraMode:'centered'} }` |
+| Base Instance | Resolume Clip | One use of a base with filled parameters | `{ base: 'tunnel', params: {shape:'doubleTri', ringCount:24, rotation:{axis:'z', speed:0.4}, cameraSensitivity:1, paletteMode:'multi'} }` |
 | Scene | Resolume Composition / Deck | Ready-to-activate item in the playlist. Contains 1..N instances + global background/gain/speed. | `Neon Tri Tunnel` = `instances:[tunnel(mixed)]`, `Punch+Particles` = `instances:[gridLed, particles]` |
 
 ## 3. Catalog vs Playlist (what the user sees)
@@ -47,6 +47,7 @@ export interface ScenePreset {
 *   **Factory + Composite:** bases are factories, scenes are composites — no duplication, single responsibility per base.
 *   **Open/Closed:** add a new base by adding a file + schema, without touching existing bases.
 *   **Immutability & Validation:** presets are pure data; `BaseInstance.params` validated against base schema before render.
+*   **Strategy for Rotation:** rotation `{axis:'x'|'y'|'z', speed, reactivity}` is a standard mechanic for every base (tunnel wall spin, fractal z-spin), with base-specific visibility (circle vs tri/square/star).
 *   **Living Docs:** `scene-spec.md` + this doc stay in sync with `presets.ts` via UPDF.
 
 ## 6. Next Step
@@ -58,3 +59,4 @@ Sprint 20 will keep `instances` optional and add the first multi-base scene (`Tu
 | Version | Date | Change | Author |
 | ------- | ---- | ------ | ------ |
 | 1.0.0 | 2026-09-16 | Initial bases vs scenes separation | Marcos Ferreira Mourão |
+| 1.1.0 | 2026-09-16 | Add rotation as standard base mechanic and doubleTri star example | Marcos Ferreira Mourão |
