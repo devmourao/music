@@ -27,8 +27,9 @@ Interpretation is base-specific (particles scale with bass, tunnel advances with
 | Base | Geometry / structure | scene id, count/density, scaleRange | Scene component |
 | Matter | Color & light | palette, background, emissiveIntensity | ScenePreset |
 | Behavior | How it reacts to music | gain, speed, reactivity: bass|mids|treble, boost mapping | ScenePreset + liveRefs |
-| Camera | Framing | zoom, azimuth/elevation, cameraSensitivity 0–1 per base (parallax) | CameraRig / liveRefs + BaseInstance.params |
-| Rotation | Object spin | axis:'x'|'y'|'z', speed, reactivity (visible on tri/square/star) | Base component (standard for all bases) |
+| Camera | Framing | zoom via +/− globally (all bases), azimuth/elevation via Arrows for 3D bases | CameraRig / liveRefs |
+| Rotation | Object spin (standard for all bases) | axis:'x'|'y'|'z', keys Q/W for +/−, speed, reactivity | Base component + BaseInstance.params |
+| Shape | Geometry variant (standard for 2D bases) | shape:'tri'|'square'|'star'|'doubleTri', keys Arrows ↑/↓ next/prev, ←/→ innerScale/paletteShift | BaseInstance.params |
 | Post | What can be stacked | VHS / RGB / beatFlash on/off | PostRig |
 
 A scene feels new when at least two pieces change, not just `palette`.
@@ -84,3 +85,4 @@ Why it feels new (which 2 pieces changed):
 | 1.0.0 | 2026-09-16 | Initial scene spec and base catalog | Marcos Ferreira Mourão |
 | 1.1.0 | 2026-09-16 | Add cameraSensitivity per base for parallax in multi-base scenes | Marcos Ferreira Mourão |
 | 1.2.0 | 2026-09-16 | Add rotation as standard base mechanic and doubleTri star shape for Tunnel | Marcos Ferreira Mourão |
+| 1.3.0 | 2026-09-16 | Standardize Q/W for Z rotation and Arrows for shape/innerScale (2D) with Zoom on +/− | Marcos Ferreira Mourão |
