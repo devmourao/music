@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import * as THREE from 'three';
 import { liveRefs, useDirectorStore } from '../director/directorStore';
 import { DeformableMeshScene } from './DeformableMeshScene';
+import { FractalScene } from './FractalScene';
 import { ParticleFieldScene } from './ParticleFieldScene';
 import { TunnelFieldScene } from './TunnelFieldScene';
 import { getPreset } from './presets';
@@ -52,6 +53,15 @@ function renderBase(base: string, preset: ReturnType<typeof getPreset>) {
         speed={preset.speed}
       />
     );
+  if (base === 'fractal')
+    return (
+      <FractalScene
+        color={preset.palette.primary}
+        emissive={preset.palette.emissive}
+        gain={preset.gain}
+        speed={preset.speed}
+      />
+    );
   return (
     <ParticleFieldScene
       color={preset.palette.primary}
@@ -94,6 +104,16 @@ export function SceneHost() {
   if (preset.scene === 2)
     return (
       <TunnelFieldScene
+        key={preset.id}
+        color={preset.palette.primary}
+        emissive={preset.palette.emissive}
+        gain={preset.gain}
+        speed={preset.speed}
+      />
+    );
+  if (preset.scene === 3)
+    return (
+      <FractalScene
         key={preset.id}
         color={preset.palette.primary}
         emissive={preset.palette.emissive}
