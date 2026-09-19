@@ -49,6 +49,8 @@ interface DirectorState {
   meshTextureStatus: 'idle' | 'loading' | 'ready' | 'error';
   panelMode: PanelMode;
   autoPilotOn: boolean;
+  fractalShape: number;
+  fractalZ: number;
   toggleStrobe: () => void;
   fireBurst: () => void;
   killAll: () => void;
@@ -84,6 +86,8 @@ interface DirectorState {
   cyclePanelMode: () => void;
   setPanelMode: (mode: PanelMode) => void;
   toggleAutoPilot: () => void;
+  cycleFractalShape: (dir: 1 | -1) => void;
+  rotateFractalZ: (dir: 1 | -1) => void;
 }
 
 /**
@@ -120,6 +124,8 @@ export const useDirectorStore = create<DirectorState>((set) => ({
   meshTextureStatus: 'idle',
   panelMode: 'docked',
   autoPilotOn: true,
+  fractalShape: 0,
+  fractalZ: 0,
   toggleStrobe: () => set((s) => ({ strobeOn: !s.strobeOn })),
   fireBurst: () => {
     liveRefs.burstId += 1;
@@ -206,6 +212,14 @@ export const useDirectorStore = create<DirectorState>((set) => ({
     })),
   setPanelMode: (mode: PanelMode) => set({ panelMode: mode }),
   toggleAutoPilot: () => set((s) => ({ autoPilotOn: !s.autoPilotOn })),
+  cycleFractalShape: (dir) =>
+    set((s) => ({
+      fractalShape: (s.fractalShape + dir + 5) % 5,
+    })),
+  rotateFractalZ: (dir) =>
+    set((s) => ({
+      fractalZ: s.fractalZ + dir * 0.35,
+    })),
   zoomIn: () => {
     // Held keys auto-repeat, so each event steps the damped target.
     set((s) => ({ zoomTarget: clampZoom(s.zoomTarget + ZOOM_STEP) }));
@@ -331,4 +345,6 @@ export const SHORTCUT_MAP: Array<{ key: string; action: string }> = [
   { key: 'U', action: 'Cycle panel visibility (docked / detached / hidden)' },
   { key: 'G / F11', action: 'Toggle fullscreen output' },
   { key: 'A', action: 'Toggle auto-pilot tour' },
+  { key: 'Q / W', action: 'Fractal Z rotation +/− (when Fractal active)' },
+  { key: '↑/↓ (Fractal)', action: 'Fractal next/prev shape (when Fractal active)' },
 ];
