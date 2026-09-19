@@ -28,6 +28,7 @@ Interpretation is base-specific (particles scale with bass, tunnel advances with
 | Matter | Color & light | palette, background, emissiveIntensity | ScenePreset |
 | Behavior | How it reacts to music | gain, speed, reactivity: bass|mids|treble, boost mapping | ScenePreset + liveRefs |
 | Camera | Framing | zoom, azimuth/elevation, cameraSensitivity 0–1 per base (parallax) | CameraRig / liveRefs + BaseInstance.params |
+| Rotation | Object spin | axis:'x'|'y'|'z', speed, reactivity (visible on tri/square/star) | Base component (standard for all bases) |
 | Post | What can be stacked | VHS / RGB / beatFlash on/off | PostRig |
 
 A scene feels new when at least two pieces change, not just `palette`.
@@ -38,7 +39,7 @@ A scene feels new when at least two pieces change, not just `palette`.
 |--------|----------|-----------------------------|----------------|
 | Particle Field (existing) | Points | count, size, gain, speed | Nebula Drift |
 | Deformable Mesh (existing) | Icosahedron | displacement, gain, speed | Neon Bloom |
-| Tunnel Field (existing) | Rings | count, spacing, speed | Hyper Tunnel |
+| Tunnel Field (existing) | Rings (circle/tri/square/star/doubleTri) | count, spacing, speed, shape, rotation {axis:'x'|'y'|'z', speed, reactivity} | Hyper Tunnel (circle) / Neon Tri (doubleTri star with z-spin) |
 | Grid LED (image + LEDs) | Plane + instanced points | imageTexture, ledCount, ledMap, ledPalette, chaseSpeed | Punch Club orange chase on bass |
 | Avatar Low-Poly | GLB + 2 materials | edgeColor, fillColor, bounceScale, sway | Human edges flash on burst, body pulses on bass |
 | Fluid / Water | Plane + noise | noiseScale, flowSpeed, foamColor | Surface ripples on mids |
@@ -82,3 +83,4 @@ Why it feels new (which 2 pieces changed):
 | ------- | ---- | ------ | ------ |
 | 1.0.0 | 2026-09-16 | Initial scene spec and base catalog | Marcos Ferreira Mourão |
 | 1.1.0 | 2026-09-16 | Add cameraSensitivity per base for parallax in multi-base scenes | Marcos Ferreira Mourão |
+| 1.2.0 | 2026-09-16 | Add rotation as standard base mechanic and doubleTri star shape for Tunnel | Marcos Ferreira Mourão |

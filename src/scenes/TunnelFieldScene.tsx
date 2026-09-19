@@ -44,10 +44,18 @@ export function TunnelFieldScene({
     void delta;
 
     group.children.forEach((ring, i) => {
-      ring.position.z = wrapRingZ(offsets[i] + ((time * speedBase) % span));
+      // Each ring may be a group (doubleTri) or mesh
+      const target = ring as THREE.Group;
+      // Handle doubleTri: ring is a group with two meshes, update its position
+      target.position.z = wrapRingZ(offsets[i] + ((time * speedBase) % span));
     });
 
     group.scale.setScalar(1 + bass * 0.3 * gain + liveRefs.boost * 0.5);
+    // Standard rotation on z for Tri (visible), y for Hyper
+    const activeId = useDirectorStore.getState().activePresetId;
+    const isTriMode = activeId === 3;
+    if (isTriMode) group.rotation.z += delta * 0.4 * (0.5 + mids);
+    else group.rotation.y += delta * 0.15 * (0.5 + mids);
     material.color.setHSL((0.55 + treble * 0.45 + time * 0.02) % 1, 0.9, 0.6);
     material.emissive.setHSL((0.55 + treble * 0.45) % 1, 0.9, 0.35);
   });
@@ -57,19 +65,22 @@ export function TunnelFieldScene({
 
   return (
     <group ref={groupRef}>
-      {offsets.map((z, i) => (
-        <mesh key={i} position={[0, 0, z]} material={material}>
-          {isTri ? (
-            i % 2 === 0 ? (
+      {offsets.map((z, i) =>
+        isTri ? (
+          <group key={i} position={[0, 0, z]}>
+            <mesh material={material} rotation={[0, 0, 0]}>
               <torusGeometry args={[2.8, 0.09, 8, 3]} />
-            ) : (
-              <torusGeometry args={[2.8, 0.09, 8, 4]} />
-            )
-          ) : (
+            </mesh>
+            <mesh material={material} rotation={[0, 0, Math.PI]}>
+              <torusGeometry args={[2.8, 0.09, 8, 3]} />
+            </mesh>
+          </group>
+        ) : (
+          <mesh key={i} position={[0, 0, z]} material={material}>
             <torusGeometry args={[2.6, 0.045, 8, 64]} />
-          )}
-        </mesh>
-      ))}
+          </mesh>
+        ),
+      )}
     </group>
   );
 }
