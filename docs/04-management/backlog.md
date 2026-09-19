@@ -70,6 +70,7 @@
 | VJLAB-52 | Avatar low-poly scene — human GLB with edge/fill materials and audio-driven bounce/sway (Chroma Bouncer) | Feature | Medium | E10 | M10 | New |
 | VJLAB-53 | Preset export/import — JSON file without DB, versioned schema | Feature | Medium | E10 | M10 | New |
 | VJLAB-54 | Video frame — local video as VideoTexture in scene frame with audio analysis | Feature | Medium | E10 | M10 | New |
+| VJLAB-55 | Fractal full-screen — Mandelbrot/Julia shader with zoom/rotation reactive to bass/mids | Feature | Medium | E10 | M10 | New |
 
 ## Dependencies
 
@@ -97,3 +98,4 @@
 | 0.4.0 | 2026-09-16 | Add E09 Playlists with VJLAB-45/46 (M9) |
 | 0.5.0 | 2026-09-16 | Add E10 Builder & Media with VJLAB-50/51/52/53 (M10) |
 | 0.5.1 | 2026-09-16 | Refine VJLAB-51/52 to Grid LED Octagon Pulse and Avatar Chroma Bouncer |
+| 0.5.2 | 2026-09-16 | Add VJLAB-55 Fractal full-screen |
