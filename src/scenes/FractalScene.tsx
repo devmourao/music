@@ -23,38 +23,47 @@ const fragmentShader = `
   uniform vec3 color1;
   uniform vec3 color2;
 
-  // Julia set
+  // Star kaleidoscope — 10-point neon star as in Mute Vision reference
   vec3 palette(float d) {
-    // mix between color1 and color2 based on iterations
     return mix(color1, color2, smoothstep(0.0, 1.0, d));
   }
 
   void main() {
     vec2 uv = vUv * 2.0 - 1.0;
-    uv.x *= 1.6; // aspect
-    // Center and zoom
+    uv.x *= 1.78; // 16:9 aspect to fill screen
     float z = 1.0 / zoom;
-    vec2 c = vec2(-0.7 + sin(time * 0.05) * 0.1, 0.27 + cos(time * 0.07) * 0.1);
-    vec2 p = uv * z;
+    vec2 p = uv * z * 1.4;
 
-    // Julia iteration
-    int maxIter = 64;
-    float iter = 0.0;
-    vec2 zc = p;
-    for(int i=0; i<64; i++) {
-      if(i >= maxIter) break;
-      float x = zc.x * zc.x - zc.y * zc.y + c.x;
-      float y = 2.0 * zc.x * zc.y + c.y;
-      zc = vec2(x, y);
-      if(dot(zc,zc) > 4.0) { iter = float(i) / float(maxIter); break; }
-      iter = float(i) / float(maxIter);
+    // Polar + kaleidoscope 10 segments
+    float angle = atan(p.y, p.x);
+    float radius = length(p);
+    float segments = 10.0;
+    angle = mod(angle, 6.28318 / segments);
+    angle = abs(angle - 3.14159 / segments);
+    vec2 kp = vec2(cos(angle), sin(angle)) * radius;
+    // Add time rotation
+    float rot = time * 0.15 + mids * 0.5;
+    kp = vec2(kp.x * cos(rot) - kp.y * sin(rot), kp.x * sin(rot) + kp.y * cos(rot));
+
+    // Star SDF + neon lines
+    float star = 0.0;
+    // 10-point star via distance to lines
+    for(int i=0; i<10; i++) {
+      float a = float(i) / 10.0 * 6.28318;
+      vec2 dir = vec2(cos(a), sin(a));
+      float d = abs(dot(kp, dir) - 0.45 / zoom);
+      star += smoothstep(0.08, 0.0, d) * (0.7 + bass * 0.6);
     }
+    // Center star
+    float center = smoothstep(0.25, 0.0, radius - 0.15) * smoothstep(0.0, 0.15, radius);
+    star += center * 0.5;
+    // Ray beams
+    float beams = smoothstep(0.02, 0.0, abs(kp.y) - 0.02) * step(0.3, radius);
+    star += beams * (0.3 + bass * 0.7);
 
-    // Audio reactivity: bass pulses brightness, treble shifts hue
-    float brightness = 0.5 + bass * 0.5 + mids * 0.2;
-    vec3 col = palette(iter) * (0.6 + brightness * 0.8);
-    // Treble tint
-    col += vec3(treble * 0.2, 0.0, treble * 0.1);
+    float brightness = 0.5 + bass * 0.6 + treble * 0.2;
+    vec3 col = palette(star * 0.6) * brightness;
+    col += vec3(treble * 0.15, bass * 0.1, 0.0);
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -107,8 +116,8 @@ export function FractalScene({
   });
 
   return (
-    <mesh>
-      <planeGeometry args={[4, 4]} />
+    <mesh scale={[1.9, 1.1, 1]}>
+      <planeGeometry args={[16, 9]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}
