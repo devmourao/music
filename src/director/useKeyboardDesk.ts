@@ -139,19 +139,51 @@ export function useKeyboardDesk() {
         case 'KeyA':
           store.toggleAutoPilot();
           break;
+        case 'KeyQ':
+          if (store.activePresetId === 5) {
+            event.preventDefault();
+            store.rotateFractalZ(1);
+          }
+          break;
+        case 'KeyW':
+          if (store.activePresetId === 5) {
+            event.preventDefault();
+            store.rotateFractalZ(-1);
+          }
+          break;
         case 'ArrowLeft':
+          if (store.activePresetId === 5) {
+            event.preventDefault();
+            store.cycleFractalShape(-1);
+            break;
+          }
           event.preventDefault();
           liveRefs.azimuth -= CAMERA_STEP;
           break;
         case 'ArrowRight':
+          if (store.activePresetId === 5) {
+            event.preventDefault();
+            store.cycleFractalShape(1);
+            break;
+          }
           event.preventDefault();
           liveRefs.azimuth += CAMERA_STEP;
           break;
         case 'ArrowUp':
+          if (store.activePresetId === 5) {
+            event.preventDefault();
+            store.cycleFractalShape(1);
+            break;
+          }
           event.preventDefault();
           liveRefs.elevation = Math.min(1.2, liveRefs.elevation + CAMERA_STEP);
           break;
         case 'ArrowDown':
+          if (store.activePresetId === 5) {
+            event.preventDefault();
+            store.cycleFractalShape(-1);
+            break;
+          }
           event.preventDefault();
           liveRefs.elevation = Math.max(-1.2, liveRefs.elevation - CAMERA_STEP);
           break;

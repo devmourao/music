@@ -22,6 +22,8 @@ const fragmentShader = `
   uniform float mids;
   uniform float treble;
   uniform float boost;
+  uniform float segsOverride;
+  uniform float rotOffset;
   uniform vec3 color1;
   uniform vec3 color2;
 
@@ -35,15 +37,18 @@ const fragmentShader = `
     float z = 1.0 / zoom;
     vec2 p = uv * z * 1.35;
 
-    // Monotonic morph phase — only metamorphosis, no zoom fight
-    float morph = (sin(morphPhase) + 1.0) * 0.5; // 0..1
-    float segs = mix(10.0, 5.0, smoothstep(0.3, 0.7, morph));
+    float segs;
+    if(segsOverride > 0.5) segs = segsOverride;
+    else {
+      float morph = (sin(morphPhase) + 1.0) * 0.5;
+      segs = mix(10.0, 5.0, smoothstep(0.3, 0.7, morph));
+    }
     float angle = atan(p.y, p.x);
     float radius = length(p);
     angle = mod(angle, 6.28318 / segs);
     angle = abs(angle - 3.14159 / segs);
     vec2 kp = vec2(cos(angle), sin(angle)) * radius;
-    float rot = time * 0.12 + mids * 0.3;
+    float rot = time * 0.12 + mids * 0.3 + rotOffset;
     kp = vec2(kp.x * cos(rot) - kp.y * sin(rot), kp.x * sin(rot) + kp.y * cos(rot));
 
     // HD mandala 3 layers with radial color flow and travelling dots — stronger bass
@@ -112,6 +117,8 @@ export function FractalScene({
       mids: { value: 0 },
       treble: { value: 0 },
       boost: { value: 0 },
+      segsOverride: { value: 0 },
+      rotOffset: { value: 0 },
       color1: { value: new THREE.Color(color) },
       color2: { value: new THREE.Color(emissive) },
     }),
@@ -135,6 +142,15 @@ export function FractalScene({
     u.mids.value = THREE.MathUtils.lerp(u.mids.value, mids, 0.08);
     u.treble.value = THREE.MathUtils.lerp(u.treble.value, treble, 0.08);
     u.boost.value = liveRefs.boost;
+    const state = useDirectorStore.getState();
+    if (state.activePresetId === 5) {
+      const shapes = [10, 8, 6, 5, 12];
+      u.segsOverride.value = shapes[state.fractalShape % shapes.length];
+      u.rotOffset.value = state.fractalZ;
+    } else {
+      u.segsOverride.value = 0;
+      u.rotOffset.value = 0;
+    }
     void gain;
     void liteOn;
   });
