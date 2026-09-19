@@ -45,33 +45,36 @@ const fragmentShader = `
     float rot = time * 0.15 + mids * 0.5;
     kp = vec2(kp.x * cos(rot) - kp.y * sin(rot), kp.x * sin(rot) + kp.y * cos(rot));
 
-    // Star SDF + neon lines
+    // Star SDF + neon lines — sharp, strong colors, black background
     float star = 0.0;
-    // 10-point star via distance to lines
     for(int i=0; i<10; i++) {
       float a = float(i) / 10.0 * 6.28318;
       vec2 dir = vec2(cos(a), sin(a));
-      float d = abs(dot(kp, dir) - 0.45 / zoom);
-      star += smoothstep(0.08, 0.0, d) * (0.7 + bass * 0.6);
+      float d = abs(dot(kp, dir) - 0.42 / zoom);
+      star += smoothstep(0.025, 0.0, d) * (1.0 + bass * 0.8);
     }
-    // Center star
-    float center = smoothstep(0.25, 0.0, radius - 0.15) * smoothstep(0.0, 0.15, radius);
-    star += center * 0.5;
-    // Ray beams
-    float beams = smoothstep(0.02, 0.0, abs(kp.y) - 0.02) * step(0.3, radius);
-    star += beams * (0.3 + bass * 0.7);
+    float center = smoothstep(0.18, 0.0, abs(radius - 0.18)) * step(radius, 0.35);
+    star += center * 0.9;
+    float beams = smoothstep(0.015, 0.0, abs(kp.y) - 0.015) * step(0.32, radius);
+    star += beams * (0.5 + bass * 0.9);
 
-    float brightness = 0.5 + bass * 0.6 + treble * 0.2;
-    vec3 col = palette(star * 0.6) * brightness;
-    col += vec3(treble * 0.15, bass * 0.1, 0.0);
+    // Black background, neon star only — sharp
+    float mask = smoothstep(0.015, 0.0, 0.015 - star * 0.015);
+    // Use palette with strong contrast: color1 magenta, color2 cyan
+    vec3 neon = mix(color1, color2, smoothstep(0.0, 0.8, star));
+    // Boost saturation and brightness, no pink wash
+    float brightness = 0.9 + bass * 0.7 + mids * 0.3;
+    vec3 col = neon * brightness * smoothstep(0.0, 0.15, star);
+    // Add bloom-like glow for sharp lines
+    col += neon * pow(star, 3.0) * 0.6;
 
     gl_FragColor = vec4(col, 1.0);
   }
 `;
 
 export function FractalScene({
-  color = '#7dd3fc',
-  emissive = '#a21caf',
+  color = '#ff7aff',
+  emissive = '#00ffff',
   gain = 1,
   speed = 1,
 }: {
