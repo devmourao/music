@@ -67,8 +67,8 @@ export const PRESETS: ScenePreset[] = [
     gain: 1,
     speed: 1,
     instances: [
-      { base: 'tunnel', params: { cameraMode: 'centered', shape: 'mixed', cameraSensitivity: 0.9 } },
-      { base: 'particles', params: { count: 120, cameraSensitivity: 0.2 } },
+      { base: 'tunnel', params: { cameraMode: 'centered', shape: 'mixed', cameraSensitivity: 1, zoom: 1 } },
+      { base: 'particles', params: { count: 400, cameraSensitivity: 0.05, zoom: 1.4 } },
     ],
   },
 ];

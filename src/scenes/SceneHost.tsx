@@ -9,9 +9,11 @@ import { getPreset } from './presets';
 
 function ParallaxGroup({
   sensitivity,
+  zoom,
   children,
 }: {
   sensitivity: number;
+  zoom?: number;
   children: React.ReactNode;
 }) {
   const ref = useRef<THREE.Group>(null);
@@ -20,7 +22,15 @@ function ParallaxGroup({
     if (!g) return;
     g.rotation.y = liveRefs.azimuth * sensitivity;
     g.rotation.x = liveRefs.elevation * sensitivity;
+    if (zoom !== undefined) g.scale.setScalar(zoom);
   });
+  if (zoom !== undefined) {
+    return (
+      <group ref={ref} scale={zoom}>
+        {children}
+      </group>
+    );
+  }
   return <group ref={ref}>{children}</group>;
 }
 
@@ -61,8 +71,9 @@ export function SceneHost() {
       <group key={preset.id}>
         {preset.instances.map((inst, idx) => {
           const sens = (inst.params?.cameraSensitivity as number | undefined) ?? 1;
+          const zoom = inst.params?.zoom as number | undefined;
           return (
-            <ParallaxGroup key={`${preset.id}-${inst.base}-${idx}`} sensitivity={sens}>
+            <ParallaxGroup key={`${preset.id}-${inst.base}-${idx}`} sensitivity={sens} zoom={zoom}>
               {renderBase(inst.base, preset)}
             </ParallaxGroup>
           );
