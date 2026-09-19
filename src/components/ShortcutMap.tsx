@@ -63,6 +63,10 @@ export function ShortcutMap() {
   const fxBypassed = useDirectorStore((s) => s.fxBypassed);
   const liteOn = useDirectorStore((s) => s.liteOn);
   const autoPilotOn = useDirectorStore((s) => s.autoPilotOn);
+  const activePresetId = useDirectorStore((s) => s.activePresetId);
+  const fractalShape = useDirectorStore((s) => s.fractalShape);
+  const fractalZ = useDirectorStore((s) => s.fractalZ);
+  const fractalInner = useDirectorStore((s) => s.fractalInner);
   const mixes: Record<FxSlot, number> = {
     bloom: mixBloom,
     vignette: mixVignette,
@@ -171,6 +175,16 @@ export function ShortcutMap() {
             <span className={`pill ${autoPilotOn ? 'on pill-auto' : 'off'}`}>AUTO</span>
           </div>
         </div>
+        {activePresetId === 5 && (
+          <div className="desk-group">
+            <span className="desk-group-label">FRACTAL</span>
+            <div className="desk-pills" data-testid="fractal-hud">
+              <span className="pill on">{[10, 8, 6, 5, 12][fractalShape]}p</span>
+              <span className="pill on">inner {fractalInner.toFixed(2)}x</span>
+              <span className="pill on">Z {fractalZ.toFixed(1)}rad</span>
+            </div>
+          </div>
+        )}
       </div>
       <div className="mix-bars" data-testid="mix-bars">
         {SLOT_ORDER.map((slot) => (
