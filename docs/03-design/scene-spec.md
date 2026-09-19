@@ -27,7 +27,7 @@ Interpretation is base-specific (particles scale with bass, tunnel advances with
 | Base | Geometry / structure | scene id, count/density, scaleRange | Scene component |
 | Matter | Color & light | palette, background, emissiveIntensity | ScenePreset |
 | Behavior | How it reacts to music | gain, speed, reactivity: bass|mids|treble, boost mapping | ScenePreset + liveRefs |
-| Camera | Framing | zoom, azimuth/elevation | CameraRig / liveRefs |
+| Camera | Framing | zoom, azimuth/elevation, cameraSensitivity 0–1 per base (parallax) | CameraRig / liveRefs + BaseInstance.params |
 | Post | What can be stacked | VHS / RGB / beatFlash on/off | PostRig |
 
 A scene feels new when at least two pieces change, not just `palette`.
@@ -81,3 +81,4 @@ Why it feels new (which 2 pieces changed):
 | Version | Date | Change | Author |
 | ------- | ---- | ------ | ------ |
 | 1.0.0 | 2026-09-16 | Initial scene spec and base catalog | Marcos Ferreira Mourão |
+| 1.1.0 | 2026-09-16 | Add cameraSensitivity per base for parallax in multi-base scenes | Marcos Ferreira Mourão |
