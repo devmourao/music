@@ -35,6 +35,9 @@ export function useKeyboardDesk() {
         case 'Digit5':
           store.requestDissolve(4);
           break;
+        case 'Digit6':
+          store.requestDissolve(5);
+          break;
         case 'KeyN':
           store.requestDissolve(
             (store.activePresetId + 1) % PRESET_COUNT,

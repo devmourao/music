@@ -3,7 +3,7 @@ export interface ScenePalette {
   emissive: string;
 }
 
-export type BaseId = 'particles' | 'mesh' | 'tunnel';
+export type BaseId = 'particles' | 'mesh' | 'tunnel' | 'fractal';
 
 export interface BaseInstance {
   base: BaseId;
@@ -13,7 +13,7 @@ export interface BaseInstance {
 export interface ScenePreset {
   id: number;
   name: string;
-  scene: 0 | 1 | 2;
+  scene: 0 | 1 | 2 | 3;
   palette: ScenePalette;
   background: string;
   gain: number;
@@ -70,6 +70,15 @@ export const PRESETS: ScenePreset[] = [
       { base: 'tunnel', params: { cameraMode: 'centered', shape: 'mixed', cameraSensitivity: 1, zoom: 1 } },
       { base: 'particles', params: { count: 400, cameraSensitivity: 0.05, zoom: 1.4 } },
     ],
+  },
+  {
+    id: 5,
+    name: 'Fractal Bloom',
+    scene: 3,
+    palette: { primary: '#f0abfc', emissive: '#f59e0b' },
+    background: '#0a0618',
+    gain: 1.2,
+    speed: 0.8,
   },
 ];
 
